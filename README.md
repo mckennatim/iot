@@ -2,6 +2,8 @@
 
 ## iot
 ### log
+#### 04-all_4json-fixed_allfiles-in
+Repaired all the version 5 problems for AdrduinoJson. Now all files are included and are compiling without errors for d1_mini, wrover and nodemcu-32s
 #### 01-xp32-3jsson-spiff-mqconn
 Now connects to mqtt
 #### 00-init_2json-spiff
