@@ -39,7 +39,7 @@ void MQclient::reconn(PubSubClient& client) {
       strcat(topic,"/"); 
       strcat(topic,la.scribedTo[i]);
       client.subscribe(topic);
-      //Serial.println(topic);     
+      Serial.println(topic);     
     }
     // delay(5000);
     char* dd = "the time is being requesrd";
@@ -48,7 +48,7 @@ void MQclient::reconn(PubSubClient& client) {
     strcpy(time,cdevid);
     strcat(time,"/time");  
     client.publish(time, dd, true); 
-    Serial.println(time);   
+    Serial.println(time); 
     return;
   } else {
     Serial.print("failed, rc=");
@@ -62,6 +62,8 @@ void handleCallback(char* topic, byte* payload, unsigned int length){
   int b = 15;
   Serial.print("Payload size is ");
   Serial.println(length);
+  Serial.print("Topic is ");
+  Serial.println(topic);
   for (int i=0;i<strlen(topic);i++) {
     itopic[i] = topic[i];
     if (topic[i] == '/'){b = i;}

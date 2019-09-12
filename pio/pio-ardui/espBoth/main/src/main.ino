@@ -85,7 +85,7 @@ void readTemps(){
     sr.temp1.rec=1;
     int id = 0;
     int bit =pow(2,id);
-    int mask = 31-bit;
+    // int mask = 31-bit;
     sched.adjHeat(id, sr.temp1, po.temp1);
     f.HAYsTATEcNG=f.HAYsTATEcNG | bit;
   }
@@ -95,14 +95,14 @@ void readTemps(){
     sr.temp2.rec=1;
     int id = 1;
     int bit =pow(2,id);
-    int mask = 31-bit;
+    //int mask = 31-bit;
     sched.adjHeat(id, sr.temp2, po.temp2);
     f.HAYsTATEcNG=f.HAYsTATEcNG | bit;
   }
 }
 
 void getTime(){
-  char* dd = "the time is being requested";
+  const char* dd = "the time is being requested";
   Serial.println(dd);
   char time[20];
   strcpy(time,devid);
@@ -170,7 +170,7 @@ void loop(){
       // Serial.print("f.HAYsTATEcNG=");
       // Serial.println(f.HAYsTATEcNG);
       //console.log("example console.log entry");
-      req.pubState(f.HAYsTATEcNG);
+      // req.pubState(f.HAYsTATEcNG);
       f.HAYsTATEcNG=0;
     }
   } 

@@ -1,7 +1,29 @@
 # platformio
+platformio.exe run --target upload
+
+* unplug -> replug ->run target upload
+
+platformio.exe device monitor
+
+## recurring problems
+### libraries changing
+
+* Library dependencies should be listed in platformio.ini
+* global libraries are in `/c/Users/mcken/.platformio/lib`
+* Updating libraries can cause problems
+    * PubSubClient (mqtt) in the .h file defaults to packet size of 128. That crashes the app right away since CYURD002/devtime sends back a long string (mainly needed by web apps) Change to 256 in `/c/Users/mcken/.platformio/lib/PubSubClient_ID89/src/PubSubClient.h`
+
+### won't upload to device
+
+Maybe something else is using yo shit. Hacky solution 
+
+1. unplug device form usb port, replug it in and then quickly...
+2. platformio.exe run --target upload
 
 ## iot
 ### log
+#### 06-commands and howtoupload
+
 #### 05-main_espboth-main
 Functionality of espWemosiOT/api2/main with esp32 support. ArduinoJson and other libraries are updated.
 #### 04-all_4json-fixed_allfiles-in

@@ -22,7 +22,7 @@ public:
 	void adjHeat(int id, temp_t& te, int port);
 private:
 	void deductCrement(int id);
-	void copyProg(prg_t& t, JsonArray ev);
+	// void copyProg(prg_t& t, JsonArray ev);
 	void setCur(prg_t& p, int &cur, int &nxt);
 	void setTleft(prg_t p, int cur, int nxt, int &tleft);	
   time_t unix;
