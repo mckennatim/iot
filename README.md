@@ -5,14 +5,72 @@ platformio.exe run --target upload
 
 platformio.exe device monitor
 
+## questions
+
+hvac stack exception 
+
+ended up being a bad esp8266
+
+but in general... from powershell run 
+
+    PS D:\fs\www\iot\pio\pio-ardui\espBoth\hvac> java -jar EspStackTraceDecoder.jar C:\Users\mcken\.platformio\packages\toolchain-xtensa\bin\xtensa-lx106-elf-addr2line.exe D:\fs\www\iot\pio\pio-ardui\espBoth\hvac\.pio\build\d1_mini\firmware.elf stack.txt
+
+    Exception Cause: 28  [LoadProhibited: A load referenced a page mapped with an attribute that does not permit loads]
+
+    0x402211ec: __fast_strcpy at /home/earle/src/esp-quick-toolchain/repo/newlib/newlib/libc/machine/xtensa/fast_strcpy.S:161
+    0x40204461: readConfig() at ??:?
+    0x4021c160: WiFiServer::_s_discard(void*, ClientContext*) at ??:?
+    0x401057d4: spi_flash_read at ??:?
+    0x40213fcf: spiffs_object_find_object_index_header_by_name_v at spiffs_nucleus.cpp:?
+    0x40100139: __wrap_spi_flash_read at ??:?
+    0x4020e555: EspClass::flashRead(unsigned int, unsigned int*, unsigned int) at ??:?
+    0x40211c60: spiffs_hal_read(unsigned int, unsigned int, unsigned char*) at ??:?
+    0x40216c81: spiffs_phys_rd at ??:?
+    0x40214304: spiffs_page_data_check$isra$3 at spiffs_nucleus.cpp:?
+    0x40216714: spiffs_object_read at ??:?
+    0x40212a90: malloc at ??:?
+    0x40213541: SPIFFS_read at ??:?
+    0x4020e768: HardwareSerial::available() at ??:?
+    0x4021bb78: fs::File::seek(unsigned int, fs::SeekMode) at ??:?
+    0x40204555: getOnline() at ??:?
+    0x4021c2b0: WiFiServer::_s_discard(void*, ClientContext*) at ??:?
+    0x402045b2: void ArduinoJson::Internals::JsonWriter<fs::File>::writeFloat<float>(float) at ??:?
+    0x4021216e: uart_write at ??:?
+    0x4020e768: HardwareSerial::available() at ??:?
+    0x4020ea79: Print::print(String const&) at ??:?
+    0x4020ea79: Print::print(String const&) at ??:?
+    0x40100260: digitalWrite at ??:?
+    0x40204bdc: readTemps() at ??:?
+    0x40204da7: setup at ??:?
+    0x402102e4: loop_wrapper() at core_esp8266_main.cpp:?
+    0x40100591: cont_wrapper at ??:?   
+
+### How do you set the hysteresis for temp?
+ 
+### What is fCrement? How is it set? 
+It sets the time delay for sched.updTimers() and req.pubTimr() in the main loop. It is hard coded in main.cpp `flags_t f` (the 3rd flag)
+
 ## recurring problems
+
+
+### why does the pond timer have such a huge number?
+the clock is not getting set. Most often because pin PubSubClient.h the default value of 128 for packet size is not enoung for all the time info. Cange it to 256. (Done in pio-arduino but not arduino1.8.8)
+
 ### libraries changing
 
 * Library dependencies should be listed in platformio.ini
 * global libraries are in `/c/Users/mcken/.platformio/lib`
 * Updating libraries can cause problems
     * PubSubClient (mqtt) in the .h file defaults to packet size of 128. That crashes the app right away since CYURD002/devtime sends back a long string (mainly needed by web apps) Change to 256 in `/c/Users/mcken/.platformio/lib/PubSubClient_ID89/src/PubSubClient.h`
+* old code (currently pio-arduino/espBoth/main) requires old ArduinoJson
 
+    lib_deps = 
+        DHT sensor library
+        Adafruit Unified Sensor
+        ArduinoJson@^5.12.0
+
+*  `pio-arduino/espBoth/main-broke` uses ArduinoJson 6. that might have something to do on why it is broke     
+    
 ### won't upload to device
 
 Maybe something else is using yo shit. Hacky solution 
@@ -20,8 +78,24 @@ Maybe something else is using yo shit. Hacky solution
 1. unplug device form usb port, replug it in and then quickly...
 2. platformio.exe run --target upload
 
+### lotsa problems show in terminal window
+
+Solution `open folder` on one project (platformio.ini) at a time
+
 ## iot
 ### log
+### 07-pio-arduino-espBoth-hvac
+pio still works. Rolled back to prior ardionoJson
+
+    lib_deps = 
+		DHT sensor library
+		Adafruit Unified Sensor
+		ArduinoJson@^5.12.0 
+
+Created hvac device with 4 temp relays and one timer relay using  ds18b20. First version stack exception and I assumed I made a mistake. Should have then thried the working `main` code, Thought it was old shit on the eeprom (I guess I don't really use the eeprom anymore everything get loaded in build flags in pio )  
+
+BTW see questions above on how to decode stack trace.
+
 #### 06-commands and howtoupload
 
 #### 05-main_espboth-main

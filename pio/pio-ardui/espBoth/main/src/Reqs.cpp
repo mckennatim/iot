@@ -69,7 +69,7 @@ void Reqs::processInc(){
           saveConfig();
           delay(2000);
           //reset and try again, or maybe put it to deep sleep
-          ESP.restart();
+          ESP.reset();
           break;          
         case 5:
           Serial.println("in progs(deprecated)");
@@ -87,7 +87,8 @@ void Reqs::pubFlags(){
   char flags[20];
   strcpy(flags,cdevid);
   strcat(flags,"/flags"); 
-  StaticJsonDocument<500> root;
+  StaticJsonBuffer<500> jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
   root["aUTOMA"]=f.aUTOMA;
   root["fORCErESET"]=f.fORCErESET;  
   root["cREMENT"]=f.cREMENT;
@@ -98,12 +99,12 @@ void Reqs::pubFlags(){
   root["HAYsTATEcNG"]=f.HAYsTATEcNG; //11111(31 force report)state ch root["or ext
   root["CKaLARM"]=f.CKaLARM; //11111 assume alarm is set at start
   root["ISrELAYoN"]=f.ISrELAYoN;// = summary of relay states  
-  JsonArray tleft = root.createNestedArray("tIMElEFT");
+  JsonArray& tleft = root.createNestedArray("tIMElEFT");
   for(int i=0;i<5;i++){
     tleft.add(f.tIMElEFT[i]);
   }
   char ast[180];
-  serializeJson(root, ast, sizeof(ast));
+  root.printTo(ast, sizeof(ast));
   clpub(flags,ast);  
 }
 
@@ -111,34 +112,36 @@ void Reqs::pubTimr(){
   char timr[20];
   strcpy(timr,cdevid);
   strcat(timr,"/timr"); 
-  StaticJsonDocument<500> root;
+  StaticJsonBuffer<500> jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
   root["cREMENT"]=f.cREMENT;
   root["IStIMERoN"]=f.IStIMERoN;//11100 assume some time left, timers with tleft>0 
   root["ISrELAYoN"]=f.ISrELAYoN;// = summary of relay states  
-  JsonArray tleft = root.createNestedArray("tIMElEFT");
+  JsonArray& tleft = root.createNestedArray("tIMElEFT");
   for(int i=0;i<5;i++){
     tleft.add(f.tIMElEFT[i]);
   }
   char ast[180];
-  serializeJson(root, ast, sizeof(ast));
+  root.printTo(ast, sizeof(ast));
   clpub(timr,ast);  
 }
 
 void Reqs::creaJson(prg_t& p, char* astr){
-  StaticJsonDocument<2000> root;
-   root["id"]= p.id;
+  StaticJsonBuffer<2000> jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
+  root["id"]= p.id;
   root["aid"] = p.aid;
   root["ev"] = p.ev;
   root["numdata"] = p.numdata;
-  JsonArray pro = root.createNestedArray("pro");
+  JsonArray& pro = root.createNestedArray("pro");
   for(int i=0;i<p.ev;i++){
-    JsonArray data = pro.createNestedArray();
+    JsonArray& data = pro.createNestedArray();
     for (int j=0;j<p.numdata + 2;j++){
       data.add(p.prg[i][j]);
     }
   }
   char ast[120];
-  serializeJson(root, ast, sizeof(ast));
+  root.printTo(ast, sizeof(ast));
   strcpy(astr,ast);
 }
 
@@ -228,8 +231,8 @@ void Reqs::pubState(int hc){
 }
 
 bool Reqs::deseriReq(){
-  StaticJsonDocument<300> rot;
-  deserializeJson(rot, ipayload);
+  StaticJsonBuffer<300> jsonBuffer;
+  JsonObject& rot = jsonBuffer.parseObject(ipayload);
   int id = rot["id"];  
   switch(id){
    case 0://`{\"id\":0, \"req\":"srstates"}`
@@ -254,12 +257,12 @@ bool Reqs::deseriReq(){
 
 bool Reqs::deseriCmd(){
   Serial.println(ipayload);
-  StaticJsonDocument<1000> rot;
-  deserializeJson(rot, ipayload);
+  StaticJsonBuffer<1000> jsonBuffer;
+  JsonObject& rot = jsonBuffer.parseObject(ipayload);
   int id = rot["id"];
   Serial.print("id = ");
   Serial.println(id);
-  JsonArray sra = rot["sra"];
+  JsonArray& sra = rot["sra"];
   switch(id){
     case 0:
       copyHiLoState(id, sr.temp1, sra, po.temp1);
@@ -281,14 +284,14 @@ bool Reqs::deseriCmd(){
   }  
 }
 
-void Reqs::copyHiLoState(int id, temp_t& t, JsonArray ev, int port){
+void Reqs::copyHiLoState(int id, temp_t& t, JsonArray& ev, int port){
   t.hilimit = ev[0];
   t.lolimit =ev[1];
   sched.adjHeat(id, t, port);
   int bit =pow(2,id);
   f.HAYsTATEcNG=f.HAYsTATEcNG | bit;
 }
-void Reqs::copyTimrState(int id, timr_t& t, JsonArray ev, int port){
+void Reqs::copyTimrState(int id, timr_t& t, JsonArray& ev, int port){
   t.state = ev[0];
   t.rec=1;
   int bit =pow(2,id);

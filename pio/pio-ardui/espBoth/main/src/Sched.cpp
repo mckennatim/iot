@@ -14,11 +14,11 @@ extern state_t sr;
 extern char ipayload[250];
 
 void Sched::actTime(){
-  Serial.println(unix);
+  //Serial.println(unix);
   Serial.println(LLLL);
-  Serial.println(zone);
+  //Serial.println(zone);
   time_t datetime = unix + zone*60*60;
-  Serial.println(datetime); 
+  //Serial.println(datetime); 
   setTime(datetime);
   setSyncInterval(4000000); 
   Serial.print(hour()); 
@@ -27,72 +27,59 @@ void Sched::actTime(){
 }
 
 bool Sched::deseriTime(){
-  StaticJsonDocument<200> root;
-  auto error = deserializeJson(root, ipayload);
-  if (error) {
-    Serial.print(F("deserializeJson() failed with code "));
-    Serial.println(error.c_str());
-    return false;
-  }else {
-    serializeJson(root, Serial);;
-    unix = root["unix"];
-    LLLL = root["LLLL"];
-    zone = root["zone"];
-    return true;
-  }
+  StaticJsonBuffer<200> jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(ipayload);
+  root.prettyPrintTo(Serial);
+  unix = root["unix"];
+  LLLL = root["LLLL"];
+  zone = root["zone"];
+  return root.success();
+  //actTime();
 }
 
 
-// void Sched::copyProg(prg_t& t, JsonArray ev){
-//   t.ev=ev.size();
-//   // Serial.print("ev.size=");
-//   // Serial.println(ev.size());
-//   for(int h=0;h<ev.size();h++){
-//     JsonArray aprg = ev[h];
-//     // aprg.printTo(Serial);
-//     for(int j=0;j<t.numdata+2;j++){
-//       t.prg[h][j] = aprg[j];
-//       // Serial.print(t.prg[h][j]);
-//     }
-//     // Serial.println("");
-//   }        
-// }
+void Sched::copyProg(prg_t& t, JsonArray& ev){
+  t.ev=ev.size();
+  // Serial.print("ev.size=");
+  // Serial.println(ev.size());
+  for(int h=0;h<ev.size();h++){
+    JsonArray& aprg = ev[h];
+    // aprg.printTo(Serial);
+    for(int j=0;j<t.numdata+2;j++){
+      t.prg[h][j] = aprg[j];
+      // Serial.print(t.prg[h][j]);
+    }
+    // Serial.println("");
+  }        
+}
 
 void Sched::deseriProg(char* kstr){
   Serial.println(kstr);
-  StaticJsonDocument<1000> rot;
-  auto error = deserializeJson(rot, kstr);
-  if (error) {
-    Serial.print(F("deserializeJson() failed with code "));
-    Serial.println(error.c_str());
-    return;
-  }  
+  StaticJsonBuffer<1000> jsonBuffer;
+  JsonObject& rot = jsonBuffer.parseObject(kstr);
   int id = rot["id"];
-  JsonArray events = rot["pro"];
+  // Serial.print("id = ");
+  // Serial.println(id);
+  JsonArray& events = rot["pro"];
   switch(id){
     case 0:
-      prgs.temp1.ev=events.size();
-      copyArray(events, prgs.temp1.prg);
+      copyProg(prgs.temp1, events);
       f.CKaLARM=f.CKaLARM | 1;          
       break;
     case 1:
-      prgs.temp2.ev=events.size();
-      copyArray(events, prgs.temp2.prg);          
+      copyProg(prgs.temp2, events);          
       f.CKaLARM=f.CKaLARM | 2;          
       break;
     case 2:
-      prgs.timr1.ev=events.size();
-      copyArray(events, prgs.timr1.prg);          
+      copyProg(prgs.timr1, events);          
       f.CKaLARM=f.CKaLARM | 4;          
       break;
     case 3:
-      prgs.timr2.ev=events.size();
-      copyArray(events, prgs.timr2.prg);          
+      copyProg(prgs.timr2, events);          
       f.CKaLARM=f.CKaLARM | 8;          
       break;
     case 4:
-      prgs.timr3.ev=events.size();
-      copyArray(events, prgs.timr3.prg);          
+      copyProg(prgs.timr3, events);          
       f.CKaLARM=f.CKaLARM | 16;          
       break;
     default:
@@ -105,10 +92,6 @@ void Sched::deseriProg(char* kstr){
 void Sched::setTleft(prg_t p, int cur, int nxt, int &tleft){
   int hr = hour();
   int min = minute(); 
-  Serial.print("cur=");
-  Serial.println(cur);
-  Serial.print("nxt=");
-  Serial.println(nxt);
   if(nxt==0){
     tleft = (23-hr)*60+(59-min) +1;
   }else{
@@ -120,20 +103,14 @@ void Sched::setTleft(prg_t p, int cur, int nxt, int &tleft){
     }
     tleft= (nxthr-hr)*60 + (nxtmin - min);
   }
-  Serial.print("tleft=");
-  Serial.println(tleft);
 }
 
 void Sched::setCur(prg_t& p, int &cur, int &nxt){
-  // Serial.print("ev(size)=");
-  // Serial.println(p.ev);
-  // Serial.print("month=");
-  // Serial.println(month());
-  // Serial.print("year=");
-  // Serial.println(year());
-  // Serial.print(hour());
-  // Serial.print(":");
-  // Serial.println(minute());
+  Serial.print("ev(size)=");
+  Serial.println(p.ev);
+  Serial.print(hour());
+  Serial.print(":");
+  Serial.println(minute());
   for(int j=0; j<p.ev;j++){
     if (hour() == p.prg[j][0]){
       if (minute() < p.prg[j][1]){
@@ -369,5 +346,17 @@ void Sched::ckRelays(){
     int bit =pow(2,id);
     f.HAYsTATEcNG=f.HAYsTATEcNG | bit;    
   }
+  // Serial.print("sr.timr1.state(sr2)=");
+  // Serial.print(sr.timr1.state);
+  // Serial.print(" digitalRead(po.timr1)=");
+  // Serial.println(digitalRead(po.timr1));
+  // Serial.print("sr.timr2.state(sr3)=");
+  // Serial.print(sr.timr2.state);
+  // Serial.print(" digitalRead(po.timr2)=");
+  // Serial.println(digitalRead(po.timr2));
+  // Serial.print("sr.timr3.state(sr4)=");
+  // Serial.print(sr.timr3.state);
+  // Serial.print(" digitalRead(po.timr3)=");
+  // Serial.println(digitalRead(po.timr3));  
 }
 
