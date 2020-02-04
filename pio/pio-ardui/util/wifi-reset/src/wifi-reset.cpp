@@ -18,9 +18,10 @@ void setup() {
     Serial.begin(115200);
     WiFiManager wifiManager;
     //reset saved settings forces AP
-    wifiManager.resetSettings();
-    wifiManager.autoConnect("EspAP");
-    Serial.println("connected...yeey :)");
+    // wifiManager.resetSettings();
+    // wifiManager.autoConnect("EspAP");
+    // Serial.println("connected...yeey :)");
+    WiFi.disconnect();
 }
 
 void loop() {

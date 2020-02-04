@@ -21,7 +21,7 @@ public:
 private:	
 	bool dog;
 	void creaJson(prg_t& p, char* astr);
-	void clpub(char status[20], char astr[120]);
+	void clpub(char status[20], char astr[200]);
 	void copyHiLoState(int id, temp_t& t, JsonArray& ev, int port);
 	void copyTimrState(int id, timr_t& t, JsonArray& ev, int port);
 };

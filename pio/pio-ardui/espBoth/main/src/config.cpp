@@ -104,6 +104,8 @@ void getOnline(){
   //fetches ssid and pass and tries to connect
   //if it does not connect it starts an access point with the specified name
   //and goes into a blocking loop awaiting configuration
+  wifiManager.setConnectTimeout(60);
+  wifiManager.setConfigPortalTimeout(180);
   if (!wifiManager.autoConnect("connectEspAP")) {
     Serial.println("failed to connect and hit timeout");
     delay(3000);

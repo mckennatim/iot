@@ -1,0 +1,365 @@
+{
+  "CYURD006": [
+    {
+      "sr": 0,
+      "label": "temp-out"
+    }
+  ],
+  "CYURD030": [
+    {
+      "sr": 0,
+      "label": "kid"
+    },
+    {
+      "sr": 1,
+      "label": "lr"
+    },
+    {
+      "sr": 2,
+      "label": "martha"
+    }
+  ],
+  "CYURD031": [
+    {
+      "sr": 0,
+      "label": "master"
+    },
+    {
+      "sr": 1,
+      "label": "music"
+    },
+    {
+      "sr": 2,
+      "label": "peri"
+    },
+    {
+      "sr": 3,
+      "label": "martha"
+    }
+  ]
+}
+
+[
+  {
+    "id": "out",
+    "name": "Outside Temp",
+    "img": "out.jpg"
+  },
+  {
+    "id": "lr",
+    "name": "Living Room",
+    "img": "lr.jpg"
+  },
+  {
+    "id": "music",
+    "name": "Music Room",
+    "img": "music.jpg"
+  },
+  {
+    "id": "tv",
+    "name": "TV Room",
+    "img": "tv.jpg"
+  },
+  {
+    "id": "martha",
+    "name": "Martha's Room",
+    "img": "martha.jpg"
+  },
+  {
+    "id": "kid",
+    "name": "Kid's Suite",
+    "img": "kid.jpg"
+  },
+  {
+    "id": "peri",
+    "name": "Peri's Study",
+    "img": "peri.jpg"
+  },
+  {
+    "id": "master",
+    "name": "Master Suite",
+    "img": "master.jpg"
+  },
+]
+
+{
+  "url": "sitebuilt.net",
+  "mqtt": 1884,
+  "express": 3333
+}
+
+{
+  "HAStIMER": 16,
+  "notTimerTags": [
+    "temp",
+    "onoff",
+    "hilimit",
+    "lolimit"
+  ],
+  "hysteresis": 2,
+  "reportEvery": 5,
+  "software_version": "espboth/hvac",
+  "hardware_version": "d1_wemos",
+  "sr": [
+    {
+      "srid": 0,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          55,
+          52
+        ]
+      }
+    },
+    {
+      "srid": 1,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          66,
+          62
+        ]
+      }
+    },
+    {
+      "srid": 2,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          66,
+          62
+        ]
+      }
+    },
+    {
+      "srid": 3,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          66,
+          62
+        ]
+      }
+    },
+    {
+      "srid": 4,
+      "hayrelay": {
+        "controlled": 0,
+        "defsched": [
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "haysensor": 0
+    }
+  ]
+}
+
+{
+  "software_version": "espboth/hvac",
+"hardware_version": "d1_wemos",
+"sr": [
+  {
+    "srid": 0,
+    "haysensor": {
+      "senses": "temp",
+      "model": "DS18B20"
+    },
+    "hayrelay": {
+      "controlled": 1,
+      "defsched": [
+        0,
+        0,
+        55,
+        52
+      ]
+    }
+  },
+  {
+    "srid": 1,
+    "haysensor": {
+      "senses": "temp",
+      "model": "DS18B20"
+    },
+    "hayrelay": {
+      "controlled": 1,
+      "defsched": [
+        0,
+        0,
+        66,
+        62
+      ]
+    }
+  },
+  {
+    "srid": 2,
+    "haysensor": {
+      "senses": "temp",
+      "model": "DS18B20"
+    },
+    "hayrelay": {
+      "controlled": 1,
+      "defsched": [
+        0,
+        0,
+        66,
+        62
+      ]
+    }
+  },
+  {
+    "srid": 3,
+    "haysensor": {
+      "senses": "temp",
+      "model": "DS18B20"
+    },
+    "hayrelay": {
+      "controlled": 1,
+      "defsched": [
+        0,
+        0,
+        66,
+        62
+      ]
+    }
+  },
+  {
+    "srid": 4,
+    "hayrelay": {
+      "controlled": 0,
+      "defsched": [
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "haysensor": 0
+  }
+]
+}
+
+{
+"software_version": "2.0",
+"hardware_version": "wemos",
+"sr": [
+  {
+    "srid": 0,
+    "hayrelay": 0,
+    "haysensor": {
+      "senses": "temp",
+      "model": "DHT22"
+    }
+  },
+  {
+    "srid": 1,
+    "hayrelay": 0,
+    "haysensor": {
+      "senses": "humid",
+      "model": "DHT22"
+    }
+  },
+  {
+    "srid": 2,
+    "hayrelay": {
+      "controlled": 0,
+      "defsched": [
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "haysensor": 0
+  }
+]
+}
+
+{
+"CYURD004": [
+  {
+    "sr": 0,
+    "label": "temp-gh"
+  },
+  {
+    "sr": 1,
+    "label": "hum-gh"
+  },
+  {
+    "sr": 2,
+    "label": "light-gh"
+  }
+],
+"CYURD006": [
+  {
+    "sr": 0,
+    "label": "temp-out"
+  }
+]
+}
+
+{
+"software_version": "2.0",
+"hardware_version": "wemos",
+"sr": [
+  {
+    "srid": 0,
+    "hayrelay": 0,
+    "haysensor": {
+      "senses": "temp",
+      "model": "DHT22"
+    }
+  },
+  {
+    "srid": 1,
+    "hayrelay": 0,
+    "haysensor": {
+      "senses": "humid",
+      "model": "DHT22"
+    }
+  },
+  {
+    "srid": 2,
+    "hayrelay": {
+      "controlled": 0,
+      "defsched": [
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "haysensor": 0
+  }
+]
+}

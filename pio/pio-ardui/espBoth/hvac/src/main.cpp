@@ -24,7 +24,7 @@ prgs_t prgs {
   };
 flags_t f {0,0,5,28,0,0,31,0,0,0,{0,0,0,0,0}};
 state_t sr {{44,0,80,50,0},{33,0,90,60,0},{53,0,68,64,0},{53,0,68,64,0},{0,0}};
-ports_t po {16, 12, 13, 15, 5, 4, 14};
+ports_t po {12, 13, 15, 5, 16, 4, 14};
 labels_t la; //subsribedTo[], numcmds
 
 #define ONE_WIRE_BUS po.ds18b20 

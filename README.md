@@ -13,7 +13,7 @@ ended up being a bad esp8266
 
 but in general... from powershell run 
 
-    PS D:\fs\www\iot\pio\pio-ardui\espBoth\hvac> java -jar EspStackTraceDecoder.jar C:\Users\mcken\.platformio\packages\toolchain-xtensa\bin\xtensa-lx106-elf-addr2line.exe D:\fs\www\iot\pio\pio-ardui\espBoth\hvac\.pio\build\d1_mini\firmware.elf stack.txt
+    PS D:\fs\www\iot\pio\pio-ardui\espBoth\hvac> java -jar EspStackTraceDecoder.jar C:\Users\mcken\.platformio\packages\toolchain-xtensa\bin\xtensa-lx106-elf-addr2line.exe D:\fs\www\iot\pio\pio-ardui\espBoth\hvac\.pio\build\d1_mini\firmware.elf stack.t
 
     Exception Cause: 28  [LoadProhibited: A load referenced a page mapped with an attribute that does not permit loads]
 

@@ -140,7 +140,7 @@ void Reqs::creaJson(prg_t& p, char* astr){
       data.add(p.prg[i][j]);
     }
   }
-  char ast[120];
+  char ast[200];
   root.printTo(ast, sizeof(ast));
   strcpy(astr,ast);
 }
@@ -152,42 +152,42 @@ void Reqs::pubPrg(int ck){
   //Serial.println(prog);	
   if((ck & 1) == 1){
     prg_t p = prgs.temp1;
-    char astr[120];
+    char astr[200];
     creaJson(p, astr);
     //Serial.println(astr);
     clpub(sched,astr);
   }
   if((ck & 2) == 2){
     prg_t p = prgs.temp2;
-    char astr[120];
+    char astr[200];
     creaJson(p, astr);
     //Serial.println(astr);
     clpub(sched,astr);
   }
   if((ck & 4) == 4){
     prg_t p = prgs.timr1;
-    char astr[120];
+    char astr[200];
     creaJson(p, astr);
     //Serial.println(astr);
     clpub(sched,astr);
   }
   if((ck & 8) == 8){
     prg_t p = prgs.timr2;
-    char astr[120];
+    char astr[200];
     creaJson(p, astr);
     //Serial.println(astr);
     clpub(sched,astr);
   }
   if((ck & 16) == 16){
     prg_t p = prgs.timr3;
-    char astr[120];
+    char astr[200];
     creaJson(p, astr);
     //Serial.println(astr);
     clpub(sched,astr);
   }
 }
 
-void Reqs::clpub(char status[20], char astr[120]){
+void Reqs::clpub(char status[20], char astr[200]){
   if (cclient.connected()){
     cclient.publish(status, astr, true);
   }   

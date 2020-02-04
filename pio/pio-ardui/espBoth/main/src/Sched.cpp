@@ -55,7 +55,7 @@ void Sched::copyProg(prg_t& t, JsonArray& ev){
 
 void Sched::deseriProg(char* kstr){
   Serial.println(kstr);
-  StaticJsonBuffer<1000> jsonBuffer;
+  StaticJsonBuffer<1500> jsonBuffer;
   JsonObject& rot = jsonBuffer.parseObject(kstr);
   int id = rot["id"];
   // Serial.print("id = ");
