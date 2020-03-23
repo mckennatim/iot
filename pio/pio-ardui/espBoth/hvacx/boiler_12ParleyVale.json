@@ -1,0 +1,209 @@
+{
+  "CYURD030": [
+    {
+      "sr": 1,
+      "label": "lr"
+    }
+  ],
+  "CYURD072": [
+    {
+      "sr": 0,
+      "label": "music"
+    }
+  ],
+  "CYURD073": [
+    {
+      "sr": 0,
+      "label": "kid"
+    }
+  ],
+  "CYURD074": [
+    {
+      "sr": 0,
+      "label": "mb"
+    }
+  ],
+  "CYURD075": [
+    {
+      "sr": 0,
+      "label": "peri"
+    }
+  ],
+  "CYURD076": [
+    {
+      "sr": 0,
+      "label": "martha"
+    }
+  ],
+  "CYURD077": [
+    {
+      "sr": 0,
+      "label": "tv"
+    }
+  ],
+  "CYURD078":[
+    {
+      "sr": 0,
+      "label": "bsup"
+    },
+    {
+      "sr": 1,
+      "label": "bret"
+    },
+    {
+      "sr": 2,
+      "label": "bgas"
+    },
+    {
+      "sr": 3,
+      "label": "breset"
+    }
+  ],
+  "CYURD006": [
+    {
+      "sr": 0,
+      "label": "temp_out"
+    }
+  ]
+}
+
+zones
+
+[
+  {
+    "id": "kid",
+    "name": "Kid's Suite",
+    "img": "kid.jpg"
+  },
+  {
+    "id": "lr",
+    "name": "Living Room",
+    "img": "lr.jpg"
+  },
+  {
+    "id": "music",
+    "name": "Music Room",
+    "img": "music.jpg"
+  },
+  {
+    "id": "peri",
+    "name": "Peri's Study",
+    "img": "peri.jpg"
+  },
+  {
+    "id": "tv",
+    "name": "TV Room",
+    "img": "tv.jpg"
+  },
+  {
+    "id": "martha",
+    "name": "Martha's Room",
+    "img": "martha.jpg"
+  },
+  {
+    "id": "mb",
+    "name": "Master Bedroom",
+    "img": "mb.jpg"
+  },
+  {
+    "id": "temp_out",
+    "name": "Outside Temperature",
+    "img": "temp_out.jpg"
+  },
+  {
+    "id": "timer",
+    "name": "Timer",
+    "img": "timer.jpg"
+  },
+  {
+    "id": "bsup",
+    "name": "boiler supply temp",
+    "img": "bsup.jpg"
+  },
+  {
+    "id": "bret",
+    "name": "boiler return temp",
+    "img": "bret.jpg"
+  },
+  {
+    "id": "bgas",
+    "name": "boiler gas valve on/off",
+    "img": "bgas.jpg"
+  },
+  {
+    "id": "boutres",
+    "name": "outdoor reset state",
+    "img": "timer.jpg"
+  },
+]
+
+
+CYURD078
+boiler gas valve, supply and return temp, and outdoor reset state
+
+{
+  "url": "sitebuilt.net",
+  "mqtt": 1884,
+  "express": 3333
+}
+
+{
+  "HAStIMER": 16,
+  "notTimerTags": [
+    "temp",
+    "onoff",
+    "hilimit",
+    "lolimit",
+    "rec"
+  ],
+  "hysteresis": 2,
+  "reportEvery": 5,
+  "software_version": "espboth/boiler",
+  "hardware_version": "d1_wemos",
+  "sr": [
+    {
+      "srid": 0,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": 0
+    },
+    {
+      "srid": 1,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": 0
+    },
+    {
+      "srid": 2,
+      "haysensor": {
+        "senses": "onoff",
+        "model": "3.3v"
+      },
+      "hayrelay": 0
+    },
+    {
+      "srid": 3,
+      "haysensor": 0,
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          1
+        ]
+      }
+    }
+    {
+      "srid": 4,
+      "haysensor": {
+        "senses": "onoff",
+        "model": "3.3v"
+      },
+      "hayrelay": 0
+    },
+  ]
+}

@@ -1,0 +1,45 @@
+D:\fs\www\iot\pio\pio-ardui\espBoth\main\.pio\build\d1_mini\firmware.elf
+
+.pio\build\d1_mini\firmware.elf
+
+
+python decoder.py -p ESP8266 -t TOOL /c/Users/mcken/.platformio/packages/toolchain-xtensa -e .pio/build/d1_mini/firmware.elf stack.txt
+python decoder.py -t TOOL /c/home/tim/.platformio/packages/toolchain-xtensa -e .pio/build/d1_mini/firmware.elf stack.txt
+./decoder.py -t TOOL /c/home/tim/.platformio/packages/toolchain-xtensa -e .pio/build/d1_mini/firmware.elf stack.txt
+
+
+java -jar EspStackTraceDecoder.jar /c/Users/mcken/.platformio/packages/toolchain-xtensa/bin/xtensa-lx106-elf-addr2line.exe .pio/build/d1_mini/firmware.elf stack.txt
+
+
+java -jar EspStackTraceDecoder.jar  C:\Users\mcken\.platformio\packages\toolchain-xtensa\bin\xtensa-lx106-elf-addr2line.exe D:\fs\www\iot\pio\pio-ardui\espBoth\hvac\.pio\build\d1_mini\firmware.elf stack.txt
+
+PS D:\fs\www\iot\pio\pio-ardui\espBoth\hvac> java -jar EspStackTraceDecoder.jar  C:\Users\mcken\.platformio\packages\toolchain-xtensa\bin\xtensa-lx106-elf-addr2line.exe D:\fs\www\iot\pio\pio-ardui\espBoth\hvac\.pio\build\d1_mini\firmware.elf stack.txt
+Exception Cause: 28  [LoadProhibited: A load referenced a page mapped with an attribute that does not permit loads]
+
+0x402211ec: __fast_strcpy at /home/earle/src/esp-quick-toolchain/repo/newlib/newlib/libc/machine/xtensa/fast_strcpy.S:161
+0x40204461: readConfig() at ??:?
+0x4021c160: WiFiServer::_s_discard(void*, ClientContext*) at ??:?
+0x401057d4: spi_flash_read at ??:?
+0x40213fcf: spiffs_object_find_object_index_header_by_name_v at spiffs_nucleus.cpp:?
+0x40100139: __wrap_spi_flash_read at ??:?
+0x4020e555: EspClass::flashRead(unsigned int, unsigned int*, unsigned int) at ??:?
+0x40211c60: spiffs_hal_read(unsigned int, unsigned int, unsigned char*) at ??:?
+0x40216c81: spiffs_phys_rd at ??:?
+0x40214304: spiffs_page_data_check$isra$3 at spiffs_nucleus.cpp:?
+0x40216714: spiffs_object_read at ??:?
+0x40212a90: malloc at ??:?
+0x40213541: SPIFFS_read at ??:?
+0x4020e768: HardwareSerial::available() at ??:?
+0x4021bb78: fs::File::seek(unsigned int, fs::SeekMode) at ??:?
+0x40204555: getOnline() at ??:?
+0x4021c2b0: WiFiServer::_s_discard(void*, ClientContext*) at ??:?
+0x402045b2: void ArduinoJson::Internals::JsonWriter<fs::File>::writeFloat<float>(float) at ??:?
+0x4021216e: uart_write at ??:?
+0x4020e768: HardwareSerial::available() at ??:?
+0x4020ea79: Print::print(String const&) at ??:?
+0x4020ea79: Print::print(String const&) at ??:?
+0x40100260: digitalWrite at ??:?
+0x40204bdc: readTemps() at ??:?
+0x40204da7: setup at ??:?
+0x402102e4: loop_wrapper() at core_esp8266_main.cpp:?
+0x40100591: cont_wrapper at ??:?

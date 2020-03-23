@@ -1,0 +1,68 @@
+{
+  "devid": "CYURD100",
+  "devpwd": "geniot",
+  "description":{
+    "ports": [
+      {"temp1":5, "io":"OUTPUT"},
+      {"timr1":12, "io":"OUTPUT"},
+      {"ds18b20":4, "io":"ONE_WIRE_BUS"},
+      {"spare":14, "io":"DHTPIN"}
+    ],
+    "software": "espboth/HVAC1SMCFG"
+  },
+  "bizid": "sbs",
+  "locid": "12ParleyVale",
+  "server": [
+    {"DEVID":"CYURD100"},
+    {"OWNER":"tim@sitebuilt.net"},
+    {"PWD":"geniot"},
+    {"MQTT_SERVER":"sitebuilt.net"},
+    {"MQTT_PORT":"1884"},
+    {"SENSOR_TYPE":"ds18"}
+  ],
+  "specs":{
+    "HAStIMER": 16,
+    "notTimerTags": [
+      "temp",
+      "onoff",
+      "hilimit",
+      "lolimit"
+    ],
+    "hysteresis": 2,
+    "reportEvery": 5,
+    "software_version": "espboth/hvac1smscfg",
+    "hardware_version": "d1_wemos",
+    "sr": [
+      {
+        "srid": 0,
+        "haysensor": {
+          "senses": "temp",
+          "model": "DS18B20"
+        },
+        "hayrelay": {
+          "controlled": 1,
+          "defsched": [
+            0,
+            0,
+            55,
+            52
+          ]
+        }
+      },
+      {
+        "srid": 4,
+        "hayrelay": {
+          "controlled": 0,
+          "defsched": [
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "haysensor": 0
+      }
+    ]
+  }
+}

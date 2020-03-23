@@ -1,0 +1,312 @@
+{
+  "CYURD030": [
+    {
+      "sr": 1,
+      "label": "lr"
+    }
+  ],
+  "CYURD072": [
+    {
+      "sr": 0,
+      "label": "music"
+    }
+  ],
+  "CYURD073": [
+    {
+      "sr": 0,
+      "label": "kid"
+    }
+  ],
+  "CYURD074": [
+    {
+      "sr": 0,
+      "label": "mb"
+    }
+  ],
+  "CYURD075": [
+    {
+      "sr": 0,
+      "label": "peri"
+    }
+  ],
+  "CYURD076": [
+    {
+      "sr": 0,
+      "label": "martha"
+    }
+  ],
+  "CYURD077": [
+    {
+      "sr": 0,
+      "label": "tv"
+    }
+  ],
+  "CYURD006": [
+    {
+      "sr": 0,
+      "label": "temp_out"
+    }
+  ]
+}
+
+zones
+
+[
+  {
+    "id": "kid",
+    "name": "Kid's Suite",
+    "img": "kid.jpg"
+  },
+  {
+    "id": "lr",
+    "name": "Living Room",
+    "img": "lr.jpg"
+  },
+  {
+    "id": "music",
+    "name": "Music Room",
+    "img": "music.jpg"
+  },
+  {
+    "id": "peri",
+    "name": "Peri's Study",
+    "img": "peri.jpg"
+  },
+  {
+    "id": "tv",
+    "name": "TV Room",
+    "img": "tv.jpg"
+  },
+  {
+    "id": "martha",
+    "name": "Martha's Room",
+    "img": "martha.jpg"
+  },
+  {
+    "id": "mb",
+    "name": "Master Bedroom",
+    "img": "mb.jpg"
+  },
+  {
+    "id": "temp_out",
+    "name": "Outside Temperature",
+    "img": "temp_out.jpg"
+  },
+  {
+    "id": "timer",
+    "name": "Timer",
+    "img": "timer.jpg"
+  }
+]
+
+CYURD030
+
+thermostats (4) relay/sensors, 1 timer.
+
+12ParleyVale
+
+{
+  "url": "sitebuilt.net",
+  "mqtt": 1884,
+  "express": 3333
+}
+
+{
+  "HAStIMER": 16,
+  "notTimerTags": [
+    "temp",
+    "onoff",
+    "hilimit",
+    "lolimit"
+  ],
+  "hysteresis": 2,
+  "reportEvery": 5,
+  "software_version": "espboth/hvac",
+  "hardware_version": "d1_wemos",
+  "sr": [
+    {
+      "srid": 0,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          55,
+          52
+        ]
+      }
+    },
+    {
+      "srid": 1,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          66,
+          62
+        ]
+      }
+    },
+    {
+      "srid": 2,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          66,
+          62
+        ]
+      }
+    },
+    {
+      "srid": 3,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          66,
+          62
+        ]
+      }
+    },
+    {
+      "srid": 4,
+      "hayrelay": {
+        "controlled": 0,
+        "defsched": [
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "haysensor": 0
+    }
+  ]
+}
+
+CYURD032
+
+thermostats (3) relay/sensors, 1 timer.
+
+12ParleyVale
+
+{
+  "url": "sitebuilt.net",
+  "mqtt": 1884,
+  "express": 3333
+}
+
+{
+  "HAStIMER": 16,
+  "notTimerTags": [
+    "temp",
+    "onoff",
+    "hilimit",
+    "lolimit"
+  ],
+  "hysteresis": 2,
+  "reportEvery": 5,
+  "software_version": "espboth/hvac",
+  "hardware_version": "d1_wemos",
+  "sr": [
+    {
+      "srid": 0,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          55,
+          52
+        ]
+      }
+    },
+    {
+      "srid": 1,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          66,
+          62
+        ]
+      }
+    },
+    {
+      "srid": 2,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          66,
+          62
+        ]
+      }
+    },
+    {
+      "srid": 3,
+      "haysensor": {
+        "senses": "temp",
+        "model": "DS18B20"
+      },
+      "hayrelay": {
+        "controlled": 1,
+        "defsched": [
+          0,
+          0,
+          66,
+          62
+        ]
+      }
+    },
+    {
+      "srid": 4,
+      "hayrelay": {
+        "controlled": 0,
+        "defsched": [
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "haysensor": 0
+    }
+  ]
+}

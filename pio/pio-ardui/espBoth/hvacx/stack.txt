@@ -1,0 +1,79 @@
+Exception (28):
+epc1=0x402211ec epc2=0x00000000 epc3=0x00000000 excvaddr=0x00000000 depc=0x00000000
+
+>>>stack>>>
+
+ctx: cont
+sp: 3ffff9b0 end: 3fffffc0 offset: 01a0
+3ffffb50:  3ffffd60 3ffefbc4 3ffffb70 40204461
+3ffffb60:  4021c160 3ffffb70 000001f4 00000068
+3ffffb70:  3ffffb60 3ffffb78 3ffffb88 3fff1b84
+3ffffb80:  00000002 3fff1b8a 3ffffb98 3fff1b93
+3ffffb90:  00000002 3fff1b9a 3ffffba8 3fff1ba1
+3ffffba0:  00000002 3fff1bad 3ffffbb8 3fff1bbb
+3ffffbb0:  00000002 3fff1bc5 3ffffbc8 3fff1bca
+3ffffbc0:  00000002 3fff1bd4 00000000 3fff1bd9
+3ffffbd0:  00000002 3fff1be5 00000100 00309200
+3ffffbe0:  401057d4 00009100 3fff0f08 40213fcf
+3ffffbf0:  40100139 3fff1740 00309200 00309300
+3ffffc00:  6769666e 6f736a2e 00309200 4020e555
+3ffffc10:  00000000 00000000 3fff0f08 40211c60
+3ffffc20:  00000080 00000010 00000000 3fff5c00
+3ffffc30:  3fff1740 00000100 0000007c 3fff1424
+3ffffc40:  3fff1604 00309200 3fff0f08 3fff172c
+3ffffc50:  3fff1604 00309200 3fff0f08 40216c81
+3ffffc60:  00000005 3ffffca0 00000000 3fff1740
+3ffffc70:  00000000 00000000 00000020 00000100
+3ffffc80:  00000010 00000000 00000010 3fff1510
+3ffffc90:  00000092 00009200 3fff0f08 40214304
+3ffffca0:  00000082 3fff1b84 00000082 6f632f01
+3ffffcb0:  00000000 00000012 0000006e 00000000
+3ffffcc0:  00000000 00000000 00000000 3fff0f08
+3ffffcd0:  3fff150c 00000001 00000000 40216714
+3ffffce0:  00000091 00000010 3fff0f08 00000000
+3ffffcf0:  3fff1304 00000000 00000001 3fff1c06
+3ffffd00:  00000082 00000000 00000100 00300005
+3ffffd10:  00000092 00000082 00000014 40212a90
+3ffffd20:  3fff150c 00000000 3ffe8dde 00000001
+3ffffd30:  3fff1b84 00000082 3fff0f08 40213541
+3ffffd40:  3fff150c 00000012 3ffefbc4 4020e768
+3ffffd50:  3ffe8e5d 3ffefd5c 3ffefbc4 3ffefce4
+3ffffd60:  3ffe8e5d 3ffefbc4 00000082 3fff1bed
+3ffffd70:  3ffe8e0a 00000082 00000082 4021bb78
+3ffffd80:  3fff0e4c 3fff0e8c 3ffefbc4 3ffefce4
+3ffffd90:  3ffe8e5d 00000082 3fff1b84 40204555
+3ffffda0:  4021c2b0 00000000 000003e8 feefeffe
+3ffffdb0:  3fff0e4c 3fff0e8c 00000000 00000000
+3ffffdc0:  3ffefd5c feefeffe feefeffe feefeffe
+3ffffdd0:  3fffdad0 3ffe8f67 3ffefbc4 402045b2
+3ffffde0:  feefeffe feefeffe feefeffe feefeffe
+3ffffdf0:  feefeffe feefeffe feefeffe feefeffe
+3ffffe00:  feefeffe feefeffe feefeffe feefeffe
+3ffffe10:  feefeffe feefeffe feefeffe feefeffe
+3ffffe20:  feefeffe feefeffe feefeffe feefeffe
+3ffffe30:  feefeffe feefeffe feefeffe feefeffe
+3ffffe40:  feefeffe feefeffe feefeffe feefeffe
+3ffffe50:  feefeffe feefeffe feefeffe feefeffe
+3ffffe60:  feefeffe feefeffe feefeffe feefeffe
+3ffffe70:  feefeffe feefeffe feefeffe feefeffe
+3ffffe80:  feefeffe feefeffe feefeffe feefeffe
+3ffffe90:  feefeffe feefeffe feefeffe feefeffe
+3ffffea0:  feefeffe feefeffe feefeffe feefeffe
+3ffffeb0:  feefeffe feefeffe feefeffe feefeffe
+3ffffec0:  feefeffe feefeffe feefeffe feefeffe
+3ffffed0:  feefeffe feefeffe feefeffe feefeffe
+3ffffee0:  feefeffe feefeffe feefeffe feefeffe
+3ffffef0:  feefeffe feefeffe feefeffe feefeffe
+3fffff00:  feefeffe feefeffe feefeffe feefeffe
+3fffff10:  3ffe8ddf 00000000 3ffe8dde 4021216e
+3fffff20:  3ffe8f81 00000000 3ffe8f80 3ffefce4
+3fffff30:  3fffdad0 0000001a 3ffefbc4 4020e768
+3fffff40:  3fffdad0 3ffe8f67 3ffefbc4 4020ea79
+3fffff50:  3ffe8ddd 00000200 00000200 4020ea79
+3fffff60:  3ffe8f67 00000000 0000000c 40100260
+3fffff70:  0001c200 3ffe8f67 3ffe86b8 40204bdc
+3fffff80:  feefeffe 3ffe8f67 3ffefbc4 40204da7
+3fffff90:  feefeffe feefeffe feefeffe feefeffe
+3fffffa0:  feefeffe 00000000 3ffefcb4 402102e4
+3fffffb0:  feefeffe feefeffe 3ffe8a18 40100591
+<<<stack<<<
