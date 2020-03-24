@@ -20,8 +20,6 @@ DallasTemperature DS18B20a(&oneWirea);
 OneWire oneWireb(inpo.DS18B20b);
 DallasTemperature DS18B20b(&oneWireb);
 
-#define DHTTYPE DHT22 
-#define DHTPIN inpo.Dht11
 DHT dht(inpo.Dht11, DHT11);
 
 
@@ -34,6 +32,7 @@ MQclient mq(devid, owner, pwd);
 
 
 void initShit(){
+  printf("A0 = %d",A0);
   pinMode(inpo.Dht11, INPUT);
   for (int i=0;i<SE.len;i++){
     Serial.println(SE.se[i].model);
@@ -77,15 +76,19 @@ void readSensors(){
       int srh = SE.se[i].ids[1];      
       senvals[srt] = (int)(dht.readTemperature(true));
       senvals[srh] = (int)dht.readHumidity();
-      printf("Temp%d: %d degrees, port: %d \n",srt, senvals[srt], DHTPIN);
+      printf("Temp%d: %d degrees, port: %d \n",srt, senvals[srt], inpo.Dht11);
       printf("Humidity%d: %d percent \n",srh, senvals[srh]);
     }else if(strcmp(SE.se[i].model, "DHT11")==0){
       int srt = SE.se[i].ids[0];
       int srh = SE.se[i].ids[1];      
       senvals[srt] = (int)dht.readTemperature(true);
       senvals[srh] = (int)dht.readHumidity();
-      printf("Temp%d: %d degrees, port: %d \n",srt, senvals[srt], DHTPIN);
+      printf("Temp%d: %d degrees, port: %d \n",srt, senvals[srt], inpo.Dht11);
       printf("Humidity%d: %d percent \n",srh, senvals[srh]);
+    }else if(strcmp(SE.se[i].model, "ANALOG")==0){
+      int sr = SE.se[i].ids[0];
+      senvals[sr] = map(constrain(analogRead(inpo.ANNALOG),460,1023),463,1023,100,0);
+      printf("Soil Moisture%d: %d percent \n",sr, senvals[sr]);
     }
   }
 }

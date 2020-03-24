@@ -29,19 +29,20 @@
   static sen_t SE {
     4,//number of different sensors
     7,//number of sensors
-    {{1, {0}, "light", "BH1750"},//assumes SCL D1(5)and SDA D2(4)
+    {{1, {0}, "light", "BH1750"},//assumes SCL is D1(5) and SDA is D2(4)
     {2, {1,2}, "temp", "DS18B20a"},  
     // {2, {3,4}, "temp", "DS18B20b"},  
-    {2, {3,4}, "temp-hum", "DHT11"}}
+    {2, {3,4}, "temp-hum", "DHT11"},
+    {1, {5}, "hygrometer", "ANALOG"}}
   };
 
   struct portsin_t{
     int DS18B20a;
     int DS18B20b;
     int Dht11;
-    //int Dht12;
+    int ANNALOG;
   };
-  static portsin_t inpo {4, 5, 14};
+  static portsin_t inpo {4, 5, 14, A0};
 
 
   struct ctrld_sensor_t{
@@ -86,6 +87,5 @@
 //static const uint8_t D8 = 15;
 //static const uint8_t RX = 3;
 //static const uint8_t TX = 1;
-
 #endif
 
