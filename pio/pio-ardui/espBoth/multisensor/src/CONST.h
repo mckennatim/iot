@@ -24,25 +24,42 @@
   struct sen_t {
     int len;
     int numsens;
-    senso_t se[4];
+    senso_t se[5];
   };
   static sen_t SE {
     4,//number of different sensors
-    7,//number of sensors
-    {{1, {0}, "light", "BH1750"},//assumes SCL is D1(5) and SDA is D2(4)
-    {2, {1,2}, "temp", "DS18B20a"},  
-    // {2, {3,4}, "temp", "DS18B20b"},  
-    {2, {3,4}, "temp-hum", "DHT11"},
-    {1, {5}, "hygrometer", "ANALOG"}}
+    6,//number of sensors
+    {
+      {1, {0}, "light", "BH1750"},//assumes SCL is D1(5) and SDA is D2(4)
+      {2, {1,2}, "temp", "DS18B20a"},  
+      // {2, {3,4}, "temp", "DS18B20b"},  
+      {2, {3,4}, "temp-hum", "DHT11"},
+      {1, {5}, "hygrometer", "ANALOG"},
+      {1, {6}, "thermoco", "MAX31855"}
+    }
   };
+
+  struct astate_t{
+    int id;
+    int stsz;
+    int stdata[3];
+    bool state; 
+    bool rec;
+  };
+
+  
 
   struct portsin_t{
     int DS18B20a;
     int DS18B20b;
     int Dht11;
     int ANNALOG;
+    int SPIdo;
+    int SPIcs;//d8
+    int SPIcl;
   };
-  static portsin_t inpo {4, 5, 14, A0};
+  static portsin_t inpo {4, 5, 14, A0, 12, 15, 13};
+  // static portsin_t inpo {4, 5, 14, A0};
 
 
   struct ctrld_sensor_t{

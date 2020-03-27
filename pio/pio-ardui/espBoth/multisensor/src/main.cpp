@@ -8,8 +8,13 @@
 #include <PubSubClient.h>
 #include "CONST.h"
 #include "config.h"
-#include "MQclient.h"
+#include "MQclient.h"//globals(extern) NEW_MAIL, itopic, ipayload + Console
+#include <SPI.h>
+#include "Adafruit_MAX31855.h"
+#include "Reqs.h"
+#include "Sched.h"
 
+Adafruit_MAX31855 tc(inpo.SPIcs);
 
 ESP8266WebServer server;
 BH1750 lightMeter;
@@ -27,8 +32,11 @@ DHT dht(inpo.Dht11, DHT11);
 WiFiClient espClient;
 PubSubClient client(espClient);
 Console console(devid, client);
-//Reqs req(devid, client);
+Reqs req(devid, client);
 MQclient mq(devid, owner, pwd);
+Sched sched;
+
+
 
 
 void initShit(){
@@ -44,6 +52,10 @@ void initShit(){
     if(strcmp(SE.se[i].model, "DHT11")==0){
       dht.begin();
       Serial.println(F("DHT11 temp/hum begin"));
+    }    
+    if(strcmp(SE.se[i].model, "MAX31855")==0){
+      tc.begin();
+      Serial.println(F("MAX31855 thermoco begin"));
     }    
   }  
 }
@@ -89,6 +101,12 @@ void readSensors(){
       int sr = SE.se[i].ids[0];
       senvals[sr] = map(constrain(analogRead(inpo.ANNALOG),460,1023),463,1023,100,0);
       printf("Soil Moisture%d: %d percent \n",sr, senvals[sr]);
+    }else if(strcmp(SE.se[i].model, "MAX31855")==0){
+      int sr = SE.se[i].ids[0];
+      double ftemp =tc.readInternal();
+      Serial.println(ftemp);
+      senvals[sr] = (int)ftemp;
+      printf("Thermocpouple%d: %d degreesF \n",sr, senvals[sr]);
     }
   }
 }
@@ -104,14 +122,25 @@ void setup(){
   client.setCallback(handleCallback); //in Req.cpp
 }
 
+time_t before = 0;
+time_t schedcrement = 0;
+time_t inow;
 
 void loop() {
+  if(NEW_MAIL){
+    Serial.println("hay NEW_MAIL");
+    req.processInc();
+    NEW_MAIL=0;
+  } 
   if(!client.connected()){
     Serial.println(owner);
      mq.reconn(client);
   }else{
     client.loop();
   }  
-  readSensors();
-  delay(2000);
+  inow = millis();
+  if (inow - before > 1000) {
+    before = inow;
+    //readSensors();
+  } 
 }
