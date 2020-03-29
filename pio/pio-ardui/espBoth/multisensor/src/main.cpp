@@ -6,8 +6,8 @@
 #include <BH1750.h>
 #include <DHT.h>
 #include <PubSubClient.h>
-#include "CONST.h"
-#include "config.h"
+#include "CONFIG.h"
+#include "ConnWIFI.h"
 #include "MQclient.h"//globals(extern) NEW_MAIL, itopic, ipayload + Console
 #include <SPI.h>
 #include "Adafruit_MAX31855.h"
@@ -27,8 +27,6 @@ DallasTemperature DS18B20b(&oneWireb);
 
 DHT dht(inpo.Dht11, DHT11);
 
-
-
 WiFiClient espClient;
 PubSubClient client(espClient);
 Console console(devid, client);
@@ -37,10 +35,9 @@ MQclient mq(devid, owner, pwd);
 Sched sched;
 
 
-
-
 void initShit(){
-  printf("A0 = %d",A0);
+  Serial.println("state is ");
+  Serial.println(states[3][0]);
   pinMode(inpo.Dht11, INPUT);
   for (int i=0;i<SE.len;i++){
     Serial.println(SE.se[i].model);
@@ -116,7 +113,10 @@ void setup(){
   EEPROM.begin(512);
   initShit();
   getOnline();//config.cpp
-  dht.begin();
+  states[3][0]=17;
+  states[4][0]=14;
+  Serial.print("Stat of panic ");
+  Serial.println(states[3][0]);
   Serial.println(la.scribedTo[0]);
   client.setServer(mqtt_server, atoi(mqtt_port));
   client.setCallback(handleCallback); //in Req.cpp
@@ -141,6 +141,6 @@ void loop() {
   inow = millis();
   if (inow - before > 1000) {
     before = inow;
-    //readSensors();
+    readSensors();
   } 
 }

@@ -3,7 +3,7 @@
 
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
-#include "CONST.h"
+#include "CONFIG.h"
 
 class Reqs{
 public:

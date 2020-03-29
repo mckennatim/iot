@@ -1,13 +1,12 @@
 #include "MQclient.h"
 #include <Arduino.h>
 #include <PubSubClient.h>
-#include "CONST.h"
+#include "CONFIG.h"
 
 
 char itopic[40];
 char ipayload[256];
 bool NEW_MAIL=0;
-extern labels_t la;
 
 Console::Console(char* devid, PubSubClient& client ){
   cdevid = devid;

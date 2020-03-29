@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 #include <Arduino.h>
 #include <TimeLib.h>
-#include "config.h" //getOnline() readConfig()devid owner pwd
+#include "ConnWIFI.h" //getOnline() readConfig()devid owner pwd
 #include "Sched.h"
 
 extern Sched sched;
@@ -17,6 +17,8 @@ Reqs::Reqs(char* devid, PubSubClient& client ){
 
 //{"devtime", "cmd", "prg", "req", "set", "progs"}
 void Reqs::processInc(){
+  Serial.print("Stat of Reqs panic ");
+  Serial.println(states[4][0]);
   for (int i=0;i<la.numcmds;i++){
     if(strcmp(la.scribedTo[i], itopic)==0){
     	switch (i){
