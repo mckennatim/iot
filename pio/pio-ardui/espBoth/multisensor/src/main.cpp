@@ -36,8 +36,6 @@ Sched sched;
 
 
 void initShit(){
-  Serial.println("state is ");
-  Serial.println(states[3][0]);
   pinMode(inpo.Dht11, INPUT);
   for (int i=0;i<SE.len;i++){
     Serial.println(SE.se[i].model);
@@ -67,6 +65,11 @@ void readSensors(){
         int sr = SE.se[i].ids[j];
         senvals[sr] = (int)DS18B20a.getTempFByIndex(j);
         printf("Temp%d: %d degrees \n",sr, senvals[sr]);
+        if(abs(senvals[sr]-srs.se[sr].reading)>1 && senvals[sr] <120 && senvals[sr]>-20){
+          srs.se[sr].reading=senvals[sr];
+          int bit =pow(2,sr);
+          f.HAYsTATEcNG=f.HAYsTATEcNG | bit;
+        }
       }
     }else if(strcmp(SE.se[i].model, "DS18B20b")==0){
       for(int j=0;j<SE.se[i].nums;j++) {
@@ -113,10 +116,6 @@ void setup(){
   EEPROM.begin(512);
   initShit();
   getOnline();//config.cpp
-  states[3][0]=17;
-  states[4][0]=14;
-  Serial.print("Stat of panic ");
-  Serial.println(states[3][0]);
   Serial.println(la.scribedTo[0]);
   client.setServer(mqtt_server, atoi(mqtt_port));
   client.setCallback(handleCallback); //in Req.cpp
@@ -142,5 +141,9 @@ void loop() {
   if (inow - before > 1000) {
     before = inow;
     readSensors();
+    if(f.HAYsTATEcNG>0){
+      req.pubState(f.HAYsTATEcNG);
+      f.HAYsTATEcNG=0;
+    }
   } 
 }

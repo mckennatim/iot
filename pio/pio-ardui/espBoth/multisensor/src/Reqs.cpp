@@ -17,8 +17,6 @@ Reqs::Reqs(char* devid, PubSubClient& client ){
 
 //{"devtime", "cmd", "prg", "req", "set", "progs"}
 void Reqs::processInc(){
-  Serial.print("Stat of Reqs panic ");
-  Serial.println(states[4][0]);
   for (int i=0;i<la.numcmds;i++){
     if(strcmp(la.scribedTo[i], itopic)==0){
     	switch (i){
@@ -35,3 +33,17 @@ void Reqs::processInc(){
     }
   }
 }   
+
+void Reqs::pubState(int hc){
+  Serial.print("in publishState w: ");
+  Serial.println(hc);
+  char srstate[20];
+  strcpy(srstate,cdevid);
+  strcat(srstate,"/srstate");  
+  char astr[120];
+  for( int i=1; i<=SE.numsens, i++){
+    if(hc&i==i){
+      Serial.println("publish state for ");
+    }
+  }
+}

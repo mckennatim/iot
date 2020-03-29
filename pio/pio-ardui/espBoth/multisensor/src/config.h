@@ -28,8 +28,17 @@
   };
   extern const sen_t SE;
 
-  extern int states[7][1];
-  // int state[7][1];
+  struct se_t {
+    int reading;
+    int rec;
+  };
+
+  struct srs_t {
+    int numse;
+    se_t se[6];//sensors uncontrolled
+  };
+
+  extern srs_t srs;
 
   struct astate_t{
     int id;
@@ -38,8 +47,6 @@
     bool state; 
     bool rec;
   };
-
-
 
   struct portsin_t{
     int DS18B20a;
@@ -81,6 +88,22 @@
 	extern char mqtt_server[60];
 	extern char mqtt_port[6];
 	extern char sensor_type[24];
+
+  struct flags_t{
+  bool aUTOMA;
+  bool fORCErESET;  
+  int cREMENT;
+  int HAStIMR; //11100(28) 4,8, and 16 have timers not temp
+  int IStIMERoN;//11100 assume some time left, timers with tleft>0 
+  int HAYpROG;// = senrels with events>1
+  int HAYpROGcNG;// 11111(31 force report) some prog change int or ext
+  int HAYsTATEcNG; //11111(31 force report) some state change int or ext
+  int CKaLARM; //11111 assume alarm is set at start
+  int ISrELAYoN;// = summary of relay states  
+  int tIMElEFT[5];// =[0,0,56,0,0] timeleft in timrs
+};
+
+extern flags_t f;
 //static const uint8_t SDA = 4;
 //static const uint8_t SCL = 5;
 //
