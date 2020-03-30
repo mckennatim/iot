@@ -3,7 +3,7 @@
 /*CONFIG extern const device variables*/
 const sen_t SE {
   4,//number of different sensors
-  6,//number of sensors
+  6,//number of sensors(numsens)
   {
     {1, {0}, "light", "BH1750"},//assumes SCL is D1(5) and SDA is D2(4)
     {2, {1,2}, "temp", "DS18B20a"},  

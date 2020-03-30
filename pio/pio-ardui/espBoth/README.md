@@ -17,8 +17,8 @@ https://steve.fi/hardware/d1-pins/
 
 ## log
 
-### 3/29/20 06-multisensor-pubState
-
+### 3/29/20 07-multisensor-pubState
+All sensors except max31855 working and publishing
 
 ### 3/28/20 05-multisensor-CONFIG
 constant values you need access too in multiple files are best declared in a .h file ex: `struct sen_t { .... };, extern const sent_t SE;` then intialized or set in a .cpp file  ex: `const labels_t la {

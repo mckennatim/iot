@@ -55,20 +55,24 @@ void initShit(){
   }  
 }
 
+void updAndNotify(int i, int sr, int val){
+  Serial.println(SE.se[i].model);
+  srs.se[sr].reading=val;
+  int bit =pow(2,sr);
+  f.HAYsTATEcNG=f.HAYsTATEcNG | bit;  
+}
+
 void readSensors(){
   int senvals[SE.numsens];
   for(int i=0;i<SE.len;i++){
-    Serial.println(SE.se[i].model);
     if(strcmp(SE.se[i].model, "DS18B20a")==0){
       for(int j=0;j<SE.se[i].nums;j++) {
         DS18B20a.requestTemperatures(); 
         int sr = SE.se[i].ids[j];
         senvals[sr] = (int)DS18B20a.getTempFByIndex(j);
-        printf("Temp%d: %d degrees \n",sr, senvals[sr]);
         if(abs(senvals[sr]-srs.se[sr].reading)>1 && senvals[sr] <120 && senvals[sr]>-20){
-          srs.se[sr].reading=senvals[sr];
-          int bit =pow(2,sr);
-          f.HAYsTATEcNG=f.HAYsTATEcNG | bit;
+          updAndNotify(i,sr, senvals[sr]);
+          printf("Temp%d: %d degrees \n",sr, senvals[sr]);
         }
       }
     }else if(strcmp(SE.se[i].model, "DS18B20b")==0){
@@ -76,37 +80,61 @@ void readSensors(){
         int sr = SE.se[i].ids[j];
         DS18B20b.requestTemperatures(); 
         senvals[sr] = (int)DS18B20b.getTempFByIndex(j);
-        printf("Temp%d: %d degrees \n",sr, senvals[sr]);
+        if(abs(senvals[sr]-srs.se[sr].reading)>1 && senvals[sr] <120 && senvals[sr]>-20){
+          updAndNotify(i,sr, senvals[sr]);
+          printf("Temp%d: %d degrees \n",sr, senvals[sr]);
+        }
       }
     }else if(strcmp(SE.se[i].model, "BH1750")==0){
       int lux = (int)lightMeter.readLightLevel();
       int sr = SE.se[i].ids[0];
       senvals[sr] = lux;
-      printf("Light%d: %d lux \n",sr, senvals[sr]);
+      if(abs(senvals[sr]-srs.se[sr].reading)>5 && senvals[sr] <1500 && senvals[sr]>0){
+        updAndNotify(i,sr, senvals[sr]);
+        printf("Light Level%d: %d lux \n",sr, senvals[sr]);
+      }
     }else if(strcmp(SE.se[i].model, "DHT22")==0){
       int srt = SE.se[i].ids[0];
       int srh = SE.se[i].ids[1];      
       senvals[srt] = (int)(dht.readTemperature(true));
       senvals[srh] = (int)dht.readHumidity();
-      printf("Temp%d: %d degrees, port: %d \n",srt, senvals[srt], inpo.Dht11);
-      printf("Humidity%d: %d percent \n",srh, senvals[srh]);
+      if(abs(senvals[srt]-srs.se[srt].reading)>1 && senvals[srt] <100 && senvals[srt]>-20){
+        updAndNotify(i,srt, senvals[srt]);
+        printf("Temp%d: %d degrees, port: %d \n",srt, senvals[srt], inpo.Dht11);
+      }
+      if(abs(senvals[srh]-srs.se[srh].reading)>1 && senvals[srh] <100 && senvals[srh]>0){        
+        updAndNotify(i,srh, senvals[srh]);
+        printf("Humidity%d: %d percent \n",srh, senvals[srh]);
+      }
     }else if(strcmp(SE.se[i].model, "DHT11")==0){
       int srt = SE.se[i].ids[0];
       int srh = SE.se[i].ids[1];      
       senvals[srt] = (int)dht.readTemperature(true);
       senvals[srh] = (int)dht.readHumidity();
-      printf("Temp%d: %d degrees, port: %d \n",srt, senvals[srt], inpo.Dht11);
-      printf("Humidity%d: %d percent \n",srh, senvals[srh]);
+      if(abs(senvals[srt]-srs.se[srt].reading)>1 && senvals[srt] <100 && senvals[srt]>-20){
+        updAndNotify(i,srt, senvals[srt]);
+        printf("Temp%d: %d degrees, port: %d \n",srt, senvals[srt], inpo.Dht11);
+      }
+      if(abs(senvals[srh]-srs.se[srh].reading)>1 && senvals[srh] <100 && senvals[srh]>0){        
+        updAndNotify(i,srh, senvals[srh]);
+        printf("Humidity%d: %d percent \n",srh, senvals[srh]);
+      }
     }else if(strcmp(SE.se[i].model, "ANALOG")==0){
       int sr = SE.se[i].ids[0];
       senvals[sr] = map(constrain(analogRead(inpo.ANNALOG),460,1023),463,1023,100,0);
-      printf("Soil Moisture%d: %d percent \n",sr, senvals[sr]);
+      if(abs(senvals[sr]-srs.se[sr].reading)>1 && senvals[sr] <100 && senvals[sr]>0){
+        updAndNotify(i,sr, senvals[sr]);
+        printf("Soil Moisture%d: %d percent \n",sr, senvals[sr]);
+      }
     }else if(strcmp(SE.se[i].model, "MAX31855")==0){
       int sr = SE.se[i].ids[0];
       double ftemp =tc.readInternal();
       Serial.println(ftemp);
       senvals[sr] = (int)ftemp;
-      printf("Thermocpouple%d: %d degreesF \n",sr, senvals[sr]);
+      if(abs(senvals[sr]-srs.se[sr].reading)>1 && senvals[sr] <550 && senvals[sr]>0){
+        updAndNotify(i,sr, senvals[sr]);
+        printf("Thermocpouple%d: %d degreesF \n",sr, senvals[sr]);
+      }
     }
   }
 }

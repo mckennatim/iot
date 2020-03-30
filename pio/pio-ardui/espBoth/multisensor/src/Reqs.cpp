@@ -34,16 +34,30 @@ void Reqs::processInc(){
   }
 }   
 
+void Reqs::clpub(char status[20], char astr[200]){
+  Serial.print("client connected: ");
+  Serial.println(cclient.connected() ? "true" : "false");
+  if (cclient.connected()){
+    cclient.publish(status, astr, true);
+  }   
+  Serial.print(status);
+  Serial.println(astr);
+}
+
 void Reqs::pubState(int hc){
   Serial.print("in publishState w: ");
   Serial.println(hc);
   char srstate[20];
   strcpy(srstate,cdevid);
   strcat(srstate,"/srstate");  
-  char astr[120];
-  for( int i=1; i<=SE.numsens, i++){
-    if(hc&i==i){
+  char astr[200];
+  for( int i=0; i<SE.numsens; i++){
+    int bit =pow(2,i);
+    if((hc&bit)==bit){
       Serial.println("publish state for ");
+      sprintf(astr, "{\"id\":%d, \"darr\":[%d], \"new\":%d}", i, srs.se[i].reading, srs.se[i].rec);
+      clpub(srstate, astr);
+      srs.se[i].rec=0;
     }
   }
 }
