@@ -1,6 +1,8 @@
 #include "CONFIG.h"
 
-char devid[9]="CYURD078";
+/*timers test program*/
+
+char devid[9]="CYURD112";
 char owner[254]="tim@sitebuilt.net";
 char pwd[24]="geniot";
 char mqtt_server[60]="sitebuilt.net";

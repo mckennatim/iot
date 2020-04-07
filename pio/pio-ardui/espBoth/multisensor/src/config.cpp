@@ -1,5 +1,11 @@
 #include "CONFIG.h"
 
+char devid[9]="CYURD078";
+char owner[254]="tim@sitebuilt.net";
+char pwd[24]="geniot";
+char mqtt_server[60]="sitebuilt.net";
+char mqtt_port[6]="1884";
+
 /*CONFIG extern const device variables*/
 const sen_t SE {
   4,//number of different sensors
@@ -27,8 +33,3 @@ srs_t srs {
   {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}}
 };
 
-char devid[9]=DEVID;
-char owner[254]=OWNER;
-char pwd[24]=PWD;
-char mqtt_server[60]=MQTT_SERVER;
-char mqtt_port[6]=MQTT_PORT;
