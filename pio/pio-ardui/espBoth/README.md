@@ -17,15 +17,79 @@ https://steve.fi/hardware/d1-pins/
 
 ## log
 
-### 4/8/20
-Incoming Message types
+### 4/8/20 09-README-incoming-outgoing_message_types-INNERworkings
 
-- [ ] /req {id:0 ...} 
+#### device INCOMING Message topics `/devtime/req/cmd/prg/set`
+
+##### from server (provides data)
+- [ ] /devtime `{dow,unix,LLLL,zone,mysql}` -> sched.deseriTime, sched.actTime()
+
+##### from app 
+
+req.desiriReq()
+- [ ] /req `{\"id\":0, \"req\":"srstates"}`->f.HAYsTATEcNG = 31;
+- [ ] /req `{\"id\":1, \"req\":"sched"}` -> req.pubPrg(31)
+- [ ] /req `{\"id\":2, \"req\":"flags"}` ->req.pubFlags()
+- [ ] /req `{"id\":3, \"req\":"timr"}`  ->req.pubTimr()
+
+req.deseriCmd() alter schedule currently running (insert into srs) 
+- [ ] /cmd (cs) `{"id":${sr},"sra":[hilimit,lolimit]}`
+- [ ] /cmd (ti) `{"id":${sr},"sra":[onoff]}`
+
+sched.deseriProg replace program on device
+uses JsonArray$ ev.size() to distinguish cs/ti
+- [ ] /prg (ti) `{"id":sr,"pro":[[hr,min,onoff], [7,45,0]]}`
+- [ ] /prg (cs) `{"id":sr,"pro":[[hr,min,hilimit,lolimit], [7,45,68,66]]}`
+
+only now used in /spa1/aapoj/paho2&pahoRaw
+- [ ] /set `{"devid":"CYURD001", "owner":"tim@sitebuilt.net", "pwd":"gekkt", "mqtt_server":"sitebuilt.net", "mqtt_port":"1884", "sensor_type":""}`
 
 
-Outgoing message 
+#### device OUTGOING message topics `/time/srstate/flags/timr/sched`
 
-- [x] /srstate
+##### to server 
+sever returns `/devtime` and `/prg` messages 
+- [x] /time `the time is being requested`
+
+##### to app 
+uses `[ici.type:[se=0,cs=1.ti=2], ici.idx:idx_in_type] = req.getTypeIdx(sr);`
+- [x] /srstate (se,ti) `{\"id\":sr, \"darr\":[onoff/reading], \"new\":rec}`
+- [x] /srstate (cs) `{\"id\":sr, \"darr\":[reading,onoff.hilimit,lolimit], \"new\":rec}`
+
+req.pubFlags() RUNSon req or if (f.CKaLARM>0)
+- [ ] /flags  `{"aUTOMA":true,"fORCErESET":false,"cREMENT":5,"HAStIMR":28,"IStIMERoN":0,"HAYpROG":0,"HAYpROGcNG":31,"HAYsTATEcNG":31,"CKaLARM":0,"ISrELAYoN":3,"tIMElEFT":[0,0,0,0,0]}`
+
+req.pubTimr() takes everthing from flag values <br/>
+RUNSon req || if (f.CKaLARM>0) || if (f.IStIMERoN >0) after sched.updTimers(); || schedAdjRelay()
+- [ ] /timr `{"cREMENT":5,"IStIMERoN":0,"ISrELAYoN":3,"tIMElEFT":[0,0,0,0,0]}`
+
+req.pubPrg(f.CKaLARM) (should be pubSched()) uses prg_t prgs, req.creaJson(), req.clPub() (not sure alarmid is needed) <br/>
+RUNSon req || if (f.CKaLARM>0) 
+- [ ] /sched `{id:sr, aid:alarmid, ev:#ofeventsinday, numdata:cshilo/tionoff, pro:[[hr,min,onoff], [hr,min,hilimit,lolimit]] }`
+
+#### INNER WORKINGS: f.CKaLARM
+Causes the inital publication of a prg and initial publications of /timr. But more importantly it causes sched.ckAlarm() to run which set up the state to curr and sets and alarm to run until the next schedule event. After it does what it need to do in loop then clears f.CKaLARM
+* in req.processIncoming /devtime it is set to 31
+* if (f.CKaLARM>0) triggers req.pubPrg(f.CKaLARM) and req.pubTimr() in mail loop
+* is set in sched.deseriProg on a /prg message from app or server
+* sched.ckAlarms() updates prg based for (f.CKaLARM & 2) == 2)
+* gets cleared (unset) in loop after it does what it causes to be done `f.CKaLARM=f.CKaLARM & 0;` sets everything to zero
+* gets set in bm8() f.CKaLARM=f.CKaLARM | 8; Callback of timer resets program to next event
+
+#### INNER WORKINGS: sched.ckAlarm() (shold be move2nextPrgEvent())
+Instantiates a new program event. It runs when a new /prg message comes in or when a alarm finishes. 
+* frees existing alarm and sets a new one
+* changes current srs data for
+  * (cs) by 
+    * updating current srs (state) hilimit & lolimit from prg, 
+    * sched.adjRelay() based on new cur, 
+    * sets HAYsTATEcNG, 
+    * sets alarmOnce() til next and gives it a callback to run when it is over
+  * (ti) by 
+    * updating current srs (state) onoff from prg, 
+    * set f.ISrELAYoN flag if state is on
+    * sched.setTleft(*p, cur, nxt, tleft); and sets f.IStIMERoN. Eventually sets f.tIMElEFT which doesn't control anything, and is just an approximation to publish to apps
+    * sets alarmOnce() til next and gives it a callback to run when it is over
 
 
 ### 4/7/2020 08-secsti
