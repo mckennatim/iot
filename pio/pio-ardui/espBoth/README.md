@@ -17,6 +17,56 @@ https://steve.fi/hardware/d1-pins/
 
 ## log
 
+### 4/8/20
+Incoming Message types
+
+- [ ] /req {id:0 ...} 
+
+
+Outgoing message 
+
+- [x] /srstate
+
+
+### 4/7/2020 08-secsti
+New codebase for esp8266 microcontrollers, should also work on esp32.
+
+Built in `espBoth/multisensor` sensor only, no relay code. Expanded the srs data of CONFIG.h type to
+
+        struct se_t {//sensors
+          int sr;
+          int reading;
+          int rec;
+        };
+        struct cs_t {//controlled sensors
+          int sr;
+          int reading;
+          int onoff;
+          int hilimit;
+          int lolimit;
+          int rec;   
+        };
+        struct ti_t {//timers
+          int sr;
+          int onoff;
+          int rec;   
+        };
+        struct srs_t {
+          int numse;
+          se_t se[5];
+          int numcs;
+          cs_t cs[1];
+          int numti;
+          ti_t ti[2];
+        };
+        extern srs_t srs;
+
+which covers all cuurent configutation se - sensor only, cs - controlled sensor, ti - just a timer .  `main.setSrs()` distinguishes between se and cs, witing the reading to the right place and calling `sched.adjRelay()` for controlled sensors. `main.setIfDif()`  sets the sensitivity of the sensor, determining how big a change warrants publishing.   
+
+`req.pubState()` uses `getTypeIdx(sr)` to find which srs type to read from and which local idx holds that sensors data.
+
+
+
 ### 3/29/20 07-multisensor-pubState
 All sensors except max31855 working and publishing
 
