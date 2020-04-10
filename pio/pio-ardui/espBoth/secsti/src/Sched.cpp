@@ -31,8 +31,8 @@ bool Sched::deseriTime(){
   //actTime();
 }
 
-void Sched::adjRelay(int id, cs_t& te){
-  int bit =pow(2,id);
+void Sched::adjRelay(int sr, cs_t& te){
+  int bit =pow(2,sr);
   int mask = 31-bit; 
   bool relayState = te.onoff;
   if (te.reading >= te.hilimit){
@@ -53,9 +53,9 @@ void Sched::adjRelay(int id, cs_t& te){
       f.ISrELAYoN = relayon;
       // req.pubTimr();
     }
-    for (int i=0;i<outpos.numpos;i++){
-      if(outpos.pod[i].sr==id){
-        digitalWrite(outpos.pod[i].portnum, relayState); 
+    for (int i=0;i<prgs.numprgs;i++){
+      if(prgs.prg[i].sr==sr){
+        digitalWrite(prgs.prg[i].port, relayState); 
       }
     }
   } 

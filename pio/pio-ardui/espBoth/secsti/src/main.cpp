@@ -59,14 +59,13 @@ void setSrs(int srid, int reading){
   for (int i=0; i<srs.numse;i++){
     if(srs.se[i].sr==srid){
       srs.se[i].reading=reading;
-      srs.se[i].rec=1;
-      Serial.println(srs.se[i].reading);
+      srs.se[i].isnew=1;
     }
   }
   for (int j=0; j<srs.numcs;j++){
     if(srs.cs[j].sr==srid){
       srs.cs[j].reading=reading;
-      srs.cs[j].rec=1;
+      srs.cs[j].isnew=1;
       sched.adjRelay(srid, srs.cs[j]);
     }
   } 
@@ -125,11 +124,11 @@ void readSensors(){
       senvals[srt] = (int)dht.readTemperature(true);
       senvals[srh] = (int)dht.readHumidity();
       old = req.getStoredReading(srt);
-      setIfDif (srt, senvals[srt] , old, 1, 120, -20);
-      printf("DHTll temp sensro:%d, reading:%d \n", srt, senvals[srt]);
+      setIfDif (srt, senvals[srt] , old, 2, 120, -20);
+      // printf("DHTll temp sensro:%d, reading:%d \n", srt, senvals[srt]);
       old = req.getStoredReading(srh);
-      setIfDif (srh, senvals[srh] , old, 1, 100, 0);
-      printf("DHTll humidity sensro:%d, reading:%d \n", srh, senvals[srh]);
+      setIfDif (srh, senvals[srh] , old, 3, 100, 0);
+      // printf("DHTll humidity sensro:%d, reading:%d \n", srh, senvals[srh]);
     }else if(strcmp(SE.stype[i].model, "ANALOG")==0){
       sr = SE.stype[i].ids[0];
       senvals[sr] = map(constrain(analogRead(inpo.ANNALOG),460,1023),463,1023,100,0);
@@ -151,7 +150,6 @@ void setup(){
   EEPROM.begin(512);
   initShit();
   getOnline();//config.cpp
-  Serial.println(la.scribedTo[0]);
   client.setServer(mqtt_server, atoi(mqtt_port));
   client.setCallback(handleCallback); //in Req.cpp
 }

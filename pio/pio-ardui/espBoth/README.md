@@ -17,20 +17,25 @@ https://steve.fi/hardware/d1-pins/
 
 ## log
 
-### 4/8/20 09-README-incoming-outgoing_message_types-INNERworkings
+### 4/10/20 11-secsti-req_pub
+
+### 4/9/20 10-secsti-ddd
+* modified `srs` data type to distinguish between `rec` - whether you want to record new values of this sensor and `isnew` to distinguish between newly sensed values and prg settings and just requests for srstate from apps
+
+### 4/8/20 09-espbothREADME-incoming-outgoing_message_types-INNERworkings
 
 #### device INCOMING Message topics `/devtime/req/cmd/prg/set`
 
 ##### from server (provides data)
-- [ ] /devtime `{dow,unix,LLLL,zone,mysql}` -> sched.deseriTime, sched.actTime()
+- [x] /devtime `{dow,unix,LLLL,zone,mysql}` -> sched.deseriTime, sched.actTime()
 
 ##### from app 
 
 req.desiriReq()
-- [ ] /req `{\"id\":0, \"req\":"srstates"}`->f.HAYsTATEcNG = 31;
-- [ ] /req `{\"id\":1, \"req\":"sched"}` -> req.pubPrg(31)
-- [ ] /req `{\"id\":2, \"req\":"flags"}` ->req.pubFlags()
-- [ ] /req `{"id\":3, \"req\":"timr"}`  ->req.pubTimr()
+- [x] /req `{\"id\":0, \"req\":"srstates"}`->f.HAYsTATEcNG = 31;
+- [x] /req `{\"id\":1, \"req\":"sched"}` -> req.pubPrg(31)
+- [x] /req `{\"id\":2, \"req\":"flags"}` ->req.pubFlags()
+- [x] /req `{"id\":3, \"req\":"timr"}`  ->req.pubTimr()
 
 req.deseriCmd() alter schedule currently running (insert into srs) 
 - [ ] /cmd (cs) `{"id":${sr},"sra":[hilimit,lolimit]}`
@@ -57,7 +62,7 @@ uses `[ici.type:[se=0,cs=1.ti=2], ici.idx:idx_in_type] = req.getTypeIdx(sr);`
 - [x] /srstate (cs) `{\"id\":sr, \"darr\":[reading,onoff.hilimit,lolimit], \"new\":rec}`
 
 req.pubFlags() RUNSon req or if (f.CKaLARM>0)
-- [ ] /flags  `{"aUTOMA":true,"fORCErESET":false,"cREMENT":5,"HAStIMR":28,"IStIMERoN":0,"HAYpROG":0,"HAYpROGcNG":31,"HAYsTATEcNG":31,"CKaLARM":0,"ISrELAYoN":3,"tIMElEFT":[0,0,0,0,0]}`
+- [x] /flags  `{"aUTOMA":true,"fORCErESET":false,"cREMENT":5,"HAStIMR":28,"IStIMERoN":0,"HAYpROG":0,"HAYpROGcNG":31,"HAYsTATEcNG":31,"CKaLARM":0,"ISrELAYoN":3,"tIMElEFT":[0,0,0,0,0]}`
 
 req.pubTimr() takes everthing from flag values <br/>
 RUNSon req || if (f.CKaLARM>0) || if (f.IStIMERoN >0) after sched.updTimers(); || schedAdjRelay()
@@ -65,7 +70,7 @@ RUNSon req || if (f.CKaLARM>0) || if (f.IStIMERoN >0) after sched.updTimers(); |
 
 req.pubPrg(f.CKaLARM) (should be pubSched()) uses prg_t prgs, req.creaJson(), req.clPub() (not sure alarmid is needed) <br/>
 RUNSon req || if (f.CKaLARM>0) 
-- [ ] /sched `{id:sr, aid:alarmid, ev:#ofeventsinday, numdata:cshilo/tionoff, pro:[[hr,min,onoff], [hr,min,hilimit,lolimit]] }`
+- [x] /sched `{id:sr, aid:alarmid, ev:#ofeventsinday, numdata:cshilo/tionoff, pro:[[hr,min,onoff], [hr,min,hilimit,lolimit]] }`
 
 #### INNER WORKINGS: f.CKaLARM
 Causes the inital publication of a prg and initial publications of /timr. But more importantly it causes sched.ckAlarm() to run which set up the state to curr and sets and alarm to run until the next schedule event. After it does what it need to do in loop then clears f.CKaLARM
@@ -91,6 +96,28 @@ Instantiates a new program event. It runs when a new /prg message comes in or wh
     * sched.setTleft(*p, cur, nxt, tleft); and sets f.IStIMERoN. Eventually sets f.tIMElEFT which doesn't control anything, and is just an approximation to publish to apps
     * sets alarmOnce() til next and gives it a callback to run when it is over
 
+#### REWRITE hurdles TODO
+The biggest obvious hurdle would be not to have a sched.ckAlarms with a specific callback meaning you have to hard code for each device setup or some general endless ifelse for all possible future device setups. https://forum.arduino.cc/index.php?topic=421834.0 has a possible solution. On every run through ckAlarms the alarmId can be connected to an srid. 
+
+    struct aidsr_t {
+      int:endtime; //maybe hr*600+min*10+srid
+      int:sr;
+      AlarmID_t aid;
+    }
+    struct srthm_t{
+      aidsr_t aidsr[6]
+    }
+    
+    extern srthm_t aids;
+
+Then each time you start and alarm you can add the endtime,sr,aid to aids and then sort it https://www.youtube.com/watch?v=W4A_PxSXO1E so the next alarm that ends is on top. Then inside the cb() you can pop of the top of aids and reset f.CKaLARM for that (cs or ti).
+
+To sort maybe I need to initalize  all the endtime to be bigger than 24*60 so that they never are on top?
+
+?????? What if the device is scheduled to do more than one thing at a particular time? you could get the wrong srid and reschedule that srid but would you lose the other one? ANS: maybe the callback would run and the next callback will run when that one finishes. that would be good. OR ELSE DON'T SCHEDULE SR EVENTS ON A DEVICE TO RUN AT THE SAME MINUTE. Maybe that is already taken care of in ckAlarms()
+
+    int asec = second()+id;        
+    p->aid = Alarm.alarmOnce(p->prg[nxt][0],p->prg[nxt][1], asec, bm2);
 
 ### 4/7/2020 08-secsti
 New codebase for esp8266 microcontrollers, should also work on esp32.

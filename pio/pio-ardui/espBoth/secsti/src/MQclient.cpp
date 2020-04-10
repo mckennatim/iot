@@ -33,11 +33,11 @@ void MQclient::reconn(PubSubClient& client) {
 
   if (client.connect(cdevid, sowner, spwd)) {
     Serial.println("connected");
-    for (int i=0;i<la.numcmds;i++){
+    for (int i=0;i<TPC.numtopics;i++){
       char topic[25];
       strcpy(topic, cdevid);
       strcat(topic,"/"); 
-      strcat(topic,la.scribedTo[i]);
+      strcat(topic,TPC.scribedTo[i]);
       client.subscribe(topic);
       //Serial.println(topic);     
     }
