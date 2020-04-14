@@ -38,13 +38,13 @@ req.desiriReq()
 - [x] /req `{"id\":3, \"req\":"timr"}`  ->req.pubTimr()
 
 req.deseriCmd() alter schedule currently running (insert into srs) 
-- [ ] /cmd (cs) `{"id":${sr},"sra":[hilimit,lolimit]}`
-- [ ] /cmd (ti) `{"id":${sr},"sra":[onoff]}`
+- [x] /cmd (cs) `{"id":${sr},"sra":[hilimit,lolimit]}`
+- [x] /cmd (ti) `{"id":${sr},"sra":[onoff]}`
 
 sched.deseriProg replace program on device
 uses JsonArray$ ev.size() to distinguish cs/ti
-- [ ] /prg (ti) `{"id":sr,"pro":[[hr,min,onoff], [7,45,0]]}`
-- [ ] /prg (cs) `{"id":sr,"pro":[[hr,min,hilimit,lolimit], [7,45,68,66]]}`
+- [x] /prg (ti) `{"id":sr,"pro":[[hr,min,onoff], [7,45,0]]}`
+- [x] /prg (cs) `{"id":sr,"pro":[[hr,min,hilimit,lolimit], [7,45,68,66]]}`
 
 only now used in /spa1/aapoj/paho2&pahoRaw
 - [ ] /set `{"devid":"CYURD001", "owner":"tim@sitebuilt.net", "pwd":"gekkt", "mqtt_server":"sitebuilt.net", "mqtt_port":"1884", "sensor_type":""}`

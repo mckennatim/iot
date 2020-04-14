@@ -5,10 +5,10 @@
 #include <ArduinoJson.h>
 #include "CONFIG.h"
 
-struct iscsidx_t {
-	int srtype;
-	int idx;
-};
+// struct iscsidx_t {
+// 	int srtype;
+// 	int idx;
+// };
 
 class Reqs{
 public:
@@ -22,7 +22,7 @@ public:
 	void pubState(int hc);
 	void processInc(); 
 	void deseriReq(); 
-	bool deseriCmd(); 
+	void deseriCmd(); 
 	iscsidx_t getTypeIdx(int srid);
 	int getStoredReading(int srid);
 private:	

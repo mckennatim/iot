@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include <EEPROM.h>
+#include <TimeLib.h>
+#include <TimeAlarms.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <Wire.h>
@@ -37,6 +39,10 @@ Sched sched;
 
 void initShit(){
   pinMode(inpo.Dht11, INPUT);
+  for(int j=0;j<prgs.numprgs;j++){
+    pinMode(prgs.prg[j].port, OUTPUT);
+    digitalWrite(prgs.prg[j].port, LOW);
+  }
   for (int i=0;i<SE.numtypes;i++){
     Serial.println(SE.stype[i].model);
     if(strcmp(SE.stype[i].model, "BH1750")==0){
@@ -133,8 +139,9 @@ void readSensors(){
       sr = SE.stype[i].ids[0];
       senvals[sr] = map(constrain(analogRead(inpo.ANNALOG),460,1023),463,1023,100,0);
       old = req.getStoredReading(sr);
-      setIfDif (sr, senvals[sr] , old, 1, 100, 0);
-    }else if(strcmp(SE.stype[i].model, "MAX31855")==0){
+      setIfDif (sr, senvals[sr] , old, 2, 101, -1);
+      // printf("Soil sensro:%d, reading:%d %\n", sr, senvals[sr]);
+  }else if(strcmp(SE.stype[i].model, "MAX31855")==0){
       sr = SE.stype[i].ids[0];
       double ftemp =tc.readInternal();
       Serial.println(ftemp);
@@ -145,6 +152,25 @@ void readSensors(){
   }
 }
 
+void getTime(){
+  const char* dd = "the time is being requested";
+  Serial.println(dd);
+  char time[20];
+  strcpy(time,devid);
+  strcat(time,"/time");  
+  client.publish(time, dd, true);   
+}
+
+void dailyAlarm(){
+  Serial.println("in daily alarm");
+  Serial.println(devid);
+  int minu = (10*((int)devid[6]-'0')+(int)devid[7]-'0')%16;
+  Serial.print(hour());
+  Serial.print(':');
+  Serial.println(minute());
+  Alarm.alarmRepeat(0,minu,0, getTime);
+}
+
 void setup(){
   Serial.begin(115200);
   EEPROM.begin(512);
@@ -152,6 +178,7 @@ void setup(){
   getOnline();//config.cpp
   client.setServer(mqtt_server, atoi(mqtt_port));
   client.setCallback(handleCallback); //in Req.cpp
+  Alarm.timerOnce(10, dailyAlarm);
 }
 
 time_t before = 0;
@@ -159,6 +186,7 @@ time_t schedcrement = 0;
 time_t inow;
 
 void loop() {
+  Alarm.delay(100);
   if(NEW_MAIL){
     Serial.println("hay NEW_MAIL");
     req.processInc();
@@ -170,6 +198,12 @@ void loop() {
   }else{
     client.loop();
   }  
+  if (f.CKaLARM>0){
+    sched.ckAlarms(); //whatever gets scheduled should publish its update
+    req.pubPrg(f.CKaLARM);
+    req.pubTimr();
+    f.CKaLARM=f.CKaLARM & 0; //11110 turnoff CKaLARM for 1
+  }
   inow = millis();
   if (inow - before > 1000) {
     before = inow;
@@ -178,5 +212,6 @@ void loop() {
       req.pubState(f.HAYsTATEcNG);
       f.HAYsTATEcNG=0;
     }
+    sched.ckRelays();
   } 
 }

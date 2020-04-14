@@ -74,6 +74,7 @@
     bool isnew;  
   };
   struct srs_t {
+    int numsr;
     int numse;
     se_t se[5];
     int numcs;
@@ -92,6 +93,7 @@
     int numdata;
     int prg[11][4];//max 11 events [hr,min,max,min]  
     int port;
+    int hms;
   };
   struct prgs_t{
     int numprgs;
@@ -114,6 +116,23 @@
     int tIMElEFT[10];// =[0,0,56,0,0] timeleft in timrs
   };
   extern flags_t f;
+
+struct iscsidx_t {
+	int srtype;
+	int idx;
+};
+
+// struct nxtal_t{
+//   int sr;
+//   AlarmID_t aid;
+//   int hms;
+// };
+// struct nxtalarr_t{
+//   int num;
+//   nxtal_t arr[10];  
+// };
+
+// extern nxtalarr_t nxtal;
 
 //ESP8266 builtin port constants
 // static const uint8_t SDA = 4;

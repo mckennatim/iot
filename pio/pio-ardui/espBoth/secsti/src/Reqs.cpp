@@ -24,7 +24,18 @@ void Reqs::processInc(){
           Serial.println("case 0 is what devtime?");
           sched.deseriTime();
           sched.actTime();
+          f.aUTOMA = 1;  
+				  f.CKaLARM = 1023; 
+				  f.HAYsTATEcNG =1023;          
           break;
+        case 1://in cmd
+          deseriCmd();
+          Serial.println(ipayload);
+          break;   
+        case 2://in prg
+          Serial.println(ipayload);
+          sched.deseriProg(ipayload);
+          break;         
         case 3://in req
           Serial.println(ipayload);
           deseriReq();
@@ -38,13 +49,46 @@ void Reqs::processInc(){
   }
 }   
 
+void Reqs::deseriCmd(){
+  Serial.println(ipayload);
+  StaticJsonBuffer<1000> jsonBuffer;
+  JsonObject& rot = jsonBuffer.parseObject(ipayload);
+  int id = rot["id"];
+  Serial.print("id = ");
+  Serial.println(id);
+  JsonArray& sra = rot["sra"]; 
+  iscsidx_t ici = getTypeIdx(id); 
+  int bit =pow(2,id);
+  switch(ici.srtype){
+  case 0://se
+    //cannot change a se reading from afar
+    break;
+  case 1://cs
+    srs.cs[ici.idx].hilimit = sra[0];
+    srs.cs[ici.idx].lolimit = sra[1];
+    sched.adjRelay(id, srs.cs[ici.idx]);
+    srs.cs[ici.idx].isnew=1;
+    f.HAYsTATEcNG=f.HAYsTATEcNG | bit; 
+    break;
+  case 2://ti
+    srs.ti[ici.idx].onoff = sra[0];
+    srs.ti[ici.idx].isnew=1;    
+    f.HAYsTATEcNG=f.HAYsTATEcNG | bit;
+    break;
+  default:
+    Serial.println("in desirCmd default");
+    break;
+  }  
+  
+}
+
 void Reqs::deseriReq(){
   StaticJsonBuffer<300> jsonBuffer;
   JsonObject& rot = jsonBuffer.parseObject(ipayload);
   int id = rot["id"];  
   switch(id){
    case 0://`{\"id\":0, \"req\":"srstates"}`
-    f.HAYsTATEcNG = 31; 
+    f.HAYsTATEcNG = 1023; //1111111111 (10,1's)
     break;
    case 1://\"id\":1, \"req\":"sched"}
     Serial.println("in desiriReq 1=sched");
@@ -105,6 +149,7 @@ int Reqs::getStoredReading(int srid){
       return srs.cs[j].reading;
     }
   }
+  return -4;
 }
 
 bool isNewRec (bool rec, bool isnew){
@@ -151,12 +196,13 @@ void Reqs::pubPrg(int hayprg){
 }
 
 void Reqs::pubState(int hc){
+  Serial.println(hc);
   char devtopic[20];
   strcpy(devtopic,cdevid);
   strcat(devtopic,"/srstate");  
   char payload[200];
   bool shouldrec = 0;
-  for( int i=0; i<SE.numsens; i++){
+  for( int i=0; i<srs.numsr; i++){
     int bit =pow(2,i);
     if((hc&bit)==bit){
       iscsidx_t ici = getTypeIdx(i);

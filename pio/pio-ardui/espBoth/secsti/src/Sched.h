@@ -4,12 +4,7 @@
 #include <Arduino.h>
 #include "CONFIG.h"
 #include <ArduinoJson.h>
-
-void bm1();
-void bm2();
-void bm4();
-void bm8();
-void bm16();
+void alarmRings();
 
 class Sched{
 public:
@@ -22,9 +17,11 @@ public:
 	void adjRelay(int id, cs_t& te);
 private:
 	void deductCrement(int id);
-	// void copyProg(prg_t& t, JsonArray& ev);
-	// void setCur(prg_t& p, int &cur, int &nxt);
-	// void setTleft(prg_t p, int cur, int nxt, int &tleft);	
+	void copyProg(prg_t& t, JsonArray& ev);
+	void setCur(prg_t& p, int &cur, int &nxt);
+	void setTleft(prg_t p, int cur, int nxt, int &tleft);	
+	void sortPrgsHms(prg_t prg[], int size);
+	void showArray(const prg_t prg[], int size);
   time_t unix;
   const char* LLLL;
   int zone;	
