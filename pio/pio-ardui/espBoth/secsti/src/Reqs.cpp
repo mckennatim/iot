@@ -234,7 +234,7 @@ void Reqs::pubTimr(){
   root["IStIMERoN"]=f.IStIMERoN;//11100 assume some time left, timers with tleft>0 
   root["ISrELAYoN"]=f.ISrELAYoN;// = summary of relay states  
   JsonArray& tleft = root.createNestedArray("tIMElEFT");
-  for(int i=0;i<10;i++){
+  for(int i=0;i<sizeOf(f.tIMElEFT);i++){
     tleft.add(f.tIMElEFT[i]);
   }
   char payload[180];

@@ -4,12 +4,8 @@
   #include <TimeLib.h>
   #include <TimeAlarms.h>
   #include <ESP8266WebServer.h>
-  // #include <Arduino.h>//if CUSTOM CODE
 	
   #define sizeOf(a) (sizeof(a) / sizeof(a[0]))
-
-  void customInit();
-  void customLoop();
 
   /*dev */
   extern char devid[9];
@@ -84,7 +80,7 @@
     int numcs;
     cs_t cs[1];/*MODIFY*/
     int numti;
-    ti_t ti[3];/*MODIFY*/
+    ti_t ti[1];/*MODIFY*/
   };
   extern srs_t srs;
    /*srs data structure declarations*/  
@@ -101,7 +97,7 @@
   };
   struct prgs_t{
     int numprgs;
-    prg_t prg[3];/*MODIFY*/
+    prg_t prg[1];/*MODIFY*/
   };
   extern prgs_t prgs;
    /*prg data structure declarations*/  
@@ -117,7 +113,7 @@
     int HAYsTATEcNG; //11111(31 force report) some state change int or ext
     int CKaLARM; //11111 assume alarm is set at start
     int ISrELAYoN;// = summary of relay states  
-    int tIMElEFT[10];// =[0,0,56,0,0] timeleft in timrs
+    int tIMElEFT[1];// =[0,0,56,0,0] timeleft in timrs
   };
   extern flags_t f;
 

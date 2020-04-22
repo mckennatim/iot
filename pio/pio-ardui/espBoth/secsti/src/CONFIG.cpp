@@ -1,61 +1,106 @@
 #include "CONFIG.h"
+// #include <Arduino.h>//if CUSTOM CODE
 
-/*dev extern device variables*/
-char devid[9]="CYURD112";
+/*DESCRIPTION
+Cascada 
+Pond D5 OUT when on acivates lohi water circuit+relay
+  and pond pumps relay (120V)
+Garden D6 & D7 OUT irrigation activate (24V)
+Transformer D8 activated when either D5,D6 or D7 hi
+hay NO sensors connected to esp8266
+CONFIG_CYURD116cascada running on espboth/secsti
+has CUSTOM CODE
+*/
+
+/*CUSTOM CODE
+Transformer D8 activated when either D5,D6 or D7 hi
+srs.ti[0] (sr 0) onoff for D5
+srs.ti[1] (sr 1) onoff for D6
+srs.ti[2] (sr 2) onoff for D7
+(see srs.ti_t and prgs.prg_t)
+otherwise make some DUMMY custom function
+void customInit(){
+  if(0==1){
+    int dog =3;
+  }
+};
+void customLoop() {
+  if(0==1){
+    int dog =3;
+  }
+};
+*/ 
+void customInit(){
+  pinMode(D8, OUTPUT);
+  digitalWrite(D8, HIGH);
+}
+void customLoop(){
+  int bef = digitalRead(D8);
+  if(srs.ti[0].onoff==1 || srs.ti[1].onoff==1 || srs.ti[2].onoff==1){
+    digitalWrite(D8, HIGH);
+  }else{
+    digitalWrite(D8, LOW);
+  }
+  int aft = digitalRead(D8);
+  if(aft != bef){
+    Serial.print("D8 is ");
+    Serial.println(aft);
+  }
+}
+
+/*SERVER
+dev extern device variables*/
+char devid[9]="CYURD116";
 char owner[254]="tim@sitebuilt.net";
 char pwd[24]="geniot";
 char mqtt_server[60]="sitebuilt.net";
 char mqtt_port[6]="1884";
 /*dev*/
 
-/*CONFIG extern const device variables*/
-/*INCOMING const mqtt topics*/
+/*SPECS
+CONFIG extern const device variables
+INCOMING const mqtt topics*/
 const topics_t TPC {
   5,
   {"devtime", "cmd", "prg", "req", "set"}
 };
 /*PORTS for INPUT*/
 const portsin_t inpo {
-  D2, //DS18b20a
-  D1, //DS18b20b
-  D5, //dht11
-  A0, //ANALOG
-  D6, //SPIdo
-  D8, //SPIcs
-  D7};//shares i2c D2 and D1
+  0, //DS18b20a
+  0, //DS18b20b
+  0,//dht11
+  0, //ANALOG
+  0, //SPIdo
+  0, //SPIcs
+  0};//shares i2c D2 and D1
 /*SE constant declarations*/  
 const sen_t SE {
-  4,//number of different sensor types
-  6,//number of sensors(numsens)
-  {
-    {1, {0}, "light", "BH1750"},//assumes SCL is D1(5) and SDA is D2(4)
-    {2, {1,2}, "temp", "DS18B20a"},  
-    // {2, {3,4}, "temp", "DS18B20b"},  
-    {2, {3,4}, "temp-hum", "DHT11"},
-    {1, {5}, "hygrometer", "ANALOG"}
-    //{1, {6}, "thermoco", "MAX31855"}//not used
-  }
+  0,//number of different sensor types
+  0,//number of sensors(numsens)
+  {}
 };
 /*------------------------------------------------------
 CONFIG extern structures (initial values, changeable)*/
 /*srs extern data structure initalization
 state of relays and sensors */ 
 srs_t srs {
-  8,//numsr
-  5,//sumse
-  {{0,45,1,0},{1,46,1,0},{3,47,0,0},{4,48,0,0},{5,49,0,0}},
-  1,//numcs
-  {{2,44,0,63,61,1,0}},
-  2,//numti
-  {{6,0,1,0},{7,0,0,0}}
+  3,//numsr
+  0,//sumse
+  {},
+  0,//numcs
+  {},
+  3,//numti
+  { //{sr,onoff,rec,isnew}
+    {0,0,1,0},{1,0,1,0},{2,0,1,0}
+  }
 };
 /*prgs extern data structure initalization*/ 
 prgs_t prgs{
   3,//numprgs
   { //sr,aid,ev,numdata,prg[[]],port,hms
-    {2,255,1,2,{{0,0,61,59}},D6,1506}, 
-    {6,255,1,1,{{0,0,1}},D7,1504},
-    {7,255,1,1,{{0,0,0}},D8,1503}
+    {0,255,1,2,{{0,0,0}},D5,1506}, 
+    {1,255,1,1,{{0,0,0}},D6,1504},
+    {2,255,1,1,{{0,0,0}},D7,1503}
   }
 };
 /*flags extern data structure*/

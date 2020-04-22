@@ -39,6 +39,7 @@ Sched sched;
 
 void initShit(){
   pinMode(inpo.Dht11, INPUT);
+  //set pinmode for all prg relays
   for(int j=0;j<prgs.numprgs;j++){
     pinMode(prgs.prg[j].port, OUTPUT);
     digitalWrite(prgs.prg[j].port, LOW);
@@ -58,9 +59,11 @@ void initShit(){
       tc.begin();
       Serial.println(F("MAX31855 thermoco begin"));
     }    
-  }  
+  } 
+  customInit();
 }
 
+/*select between se and cs, used by setIfDif*/
 void setSrs(int srid, int reading){
   for (int i=0; i<srs.numse;i++){
     if(srs.se[i].sr==srid){
@@ -77,6 +80,7 @@ void setSrs(int srid, int reading){
   } 
 }
 
+/*sets srs based upon input port, called at each sensor reading*/
 void setIfDif (int srid, int reading, int old, int dif, int hi, int lo){
   if(abs(reading-old)>dif && reading<hi && reading>lo){
     setSrs(srid, reading);
@@ -152,6 +156,7 @@ void readSensors(){
   }
 }
 
+/*functions for midnight clock reset*/  
 void getTime(){
   const char* dd = "the time is being requested";
   Serial.println(dd);
@@ -205,13 +210,21 @@ void loop() {
     f.CKaLARM=f.CKaLARM & 0; //11110 turnoff CKaLARM for 1
   }
   inow = millis();
-  if (inow - before > 1000) {
+    if(inow-schedcrement > f.cREMENT*1000){
+    schedcrement = inow;
+    if (f.IStIMERoN >0){
+      sched.updTimers();
+      req.pubTimr();
+    }
+    sched.ckRelays();
+  }
+  if (inow - before > 1000) {//every second
     before = inow;
     readSensors();
     if(f.HAYsTATEcNG>0){
       req.pubState(f.HAYsTATEcNG);
       f.HAYsTATEcNG=0;
     }
-    sched.ckRelays();
+    customLoop();
   } 
 }

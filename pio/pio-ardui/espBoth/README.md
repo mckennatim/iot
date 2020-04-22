@@ -16,6 +16,20 @@ https://steve.fi/hardware/d1-pins/
       *** [.pio\build\d1_mini\firmware.elf] Error 1
 
 ## log
+### 4/22/20 12-secsti-CUSTON_CODE
+added CUSTOM CODE
+* added function declarations `void customInit(); void customLoop();` and defined the functions in CONFIG.cpp
+* added calls in `main.cpp` in `initShit()` and `loop()`
+
+
+Implementing Cascada
+
+Changes to secsti needed: dr (dependant relay)
+
+* need the funtionality that makes ouput port hi whenever any of 3 other ports are hi else lo
+* has no sensor related to it or timer running with it
+* has no prog
+
 
 ### 4/10/20 11-secsti-req_pub
 

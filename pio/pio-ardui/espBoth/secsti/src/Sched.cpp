@@ -262,3 +262,22 @@ void Sched::showArray(const prg_t prg[], int size){
     Serial.println(prg[i].hms);
   }
 }
+
+void Sched::deductCrement(int id){
+  int mask = 31 - pow(2,id);
+  int t = f.tIMElEFT[id];
+  t = t - f.cREMENT;
+  if(t<=0){
+    t=0;
+    f.IStIMERoN = f.IStIMERoN & mask; //11011
+  }
+  f.tIMElEFT[id] = t;
+}
+
+void Sched::updTimers(){
+  for(int i=0;i<sizeOf(f.tIMElEFT);i++){
+    if(f.tIMElEFT[i]>0){
+      deductCrement(i);
+    }
+  }
+}

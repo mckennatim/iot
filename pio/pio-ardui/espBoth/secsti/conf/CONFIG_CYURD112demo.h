@@ -4,12 +4,8 @@
   #include <TimeLib.h>
   #include <TimeAlarms.h>
   #include <ESP8266WebServer.h>
-  // #include <Arduino.h>//if CUSTOM CODE
 	
   #define sizeOf(a) (sizeof(a) / sizeof(a[0]))
-
-  void customInit();
-  void customLoop();
 
   /*dev */
   extern char devid[9];
@@ -80,11 +76,11 @@
   struct srs_t {
     int numsr;
     int numse;
-    se_t se[1];/*MODIFY*/
+    se_t se[5];
     int numcs;
-    cs_t cs[1];/*MODIFY*/
+    cs_t cs[1];
     int numti;
-    ti_t ti[3];/*MODIFY*/
+    ti_t ti[2];
   };
   extern srs_t srs;
    /*srs data structure declarations*/  
@@ -101,7 +97,7 @@
   };
   struct prgs_t{
     int numprgs;
-    prg_t prg[3];/*MODIFY*/
+    prg_t prg[5];
   };
   extern prgs_t prgs;
    /*prg data structure declarations*/  
